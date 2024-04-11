@@ -1,0 +1,20 @@
+{
+    "name": "budpay/budpay-woo",
+    "description": "Budpay for WooCommerce",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Budpay Devs"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.0",
+        "woocommerce/woocommerce-sniffs": "^1.0"
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "budpay-woo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "wp-env": "wp-env"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/env": "^9.7.0",
+    "jshint": "^2.13.6"
+  }
+}
