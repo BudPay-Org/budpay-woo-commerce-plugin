@@ -2,7 +2,7 @@
 /**
  * Main Class of the Plugin.
  *
- * @package BudPay
+ * @package    Budpay/WooCommerce
  */
 
 declare(strict_types=1);
@@ -34,7 +34,7 @@ class BudPay {
 	 *
 	 * @var BudPay|null
 	 */
-	public static ?BudPay $instance;
+	public static ?BudPay $instance = null;
 
 	/**
 	 * BudPay Constructor
@@ -44,6 +44,15 @@ class BudPay {
 		$this->load_plugin_textdomain();
 		$this->includes();
 		$this->init();
+	}
+
+	/**
+	 * Main Instance.
+	 */
+	public static function instance(): BudPay {
+		self::$instance = is_null( self::$instance ) ? new self() : self::$instance;
+
+		return self::$instance;
 	}
 
 	/**

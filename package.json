@@ -1,15 +1,67 @@
 {
   "name": "budpay-woo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Budpay for WooCommerce",
   "main": "index.js",
   "scripts": {
+    "postinstall": "composer install",
+    "prebuild": "npm install && composer install",
+    "build": "npm run uglify && composer run makepot && npm run build:webpack && npm run plugin-zip",
+    "build:webpack": "wp-scripts build",
+    "start": "npm run start:webpack",
+    "start:webpack": "rimraf build/* && wp-scripts start",
+    "preuglify": "rm -f $npm_package_config_assets_js_min",
+    "uglify": "for f in $npm_package_config_assets_js_js; do file=${f%.js}; node_modules/.bin/uglifyjs $f -c -m > $file.min.js; done",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
+    "format": "wp-scripts format",
+    "plugin-zip": "wp-scripts plugin-zip",
     "wp-env": "wp-env"
   },
-  "author": "",
+  "config": {
+    "wp_org_slug": "budpay",
+    "assets": {
+      "js": {
+        "min": "assets/js/*.min.js",
+        "js": "assets/js/*.js"
+      },
+      "styles": {
+        "css": "assets/css/*.css",
+        "sass": "assets/css/*.scss",
+        "cssfolder": "assets/css/"
+      }
+    }
+  },
+  "author": "Budpay Devs",
   "license": "ISC",
+  "files": [
+    "assets",
+    "i18n",
+    "build",
+    "includes",
+    "budpay.php",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "changelog.txt",
+    "readme.txt"
+  ],
   "devDependencies": {
+    "@automattic/color-studio": "^2.6.0",
+    "@formatjs/icu-messageformat-parser": "^2.7.6",
+    "@svgr/cli": "^8.1.0",
+    "@woocommerce/dependency-extraction-webpack-plugin": "^2.3.0",
+    "@woocommerce/eslint-plugin": "^2.2.0",
     "@wordpress/env": "^9.7.0",
-    "jshint": "^2.13.6"
+    "@wordpress/prettier-config": "^3.12.0",
+    "@wordpress/scripts": "^27.6.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "jshint": "^2.13.6",
+    "rimraf": "^5.0.5",
+    "uglify-js": "^3.17.4",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "wp-textdomain": "^1.0.1"
   }
 }

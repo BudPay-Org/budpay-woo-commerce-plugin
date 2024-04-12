@@ -1,8 +1,13 @@
 {
-    "name": "budpay/budpay-woo",
+    "name": "budpay/budpay-woocommerce",
     "description": "Budpay for WooCommerce",
     "type": "wordpress-plugin",
     "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Budpay\\Woocommerce\\": "inc/"
+        }
+    },
     "authors": [
         {
             "name": "Budpay Devs"
@@ -11,6 +16,20 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "makepot-audit": [
+            "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,vendor,bin,node_modules,tests,docs\" --slug=budpay --debug"
+        ],
+        "makepot": [
+            "@makepot-audit --skip-audit"
+        ]
+    },
+    "extra": {
+        "scripts-description": {
+            "makepot-audit": "Generate i18n/languages/budpay.pot file and run audit",
+            "makepot": "Generate i18n/languages/budpay.pot file"
         }
     },
     "require-dev": {

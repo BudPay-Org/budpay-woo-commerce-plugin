@@ -8,12 +8,14 @@
  * @link       https://devs.budpay.com/
  * @since      1.0.0
  *
- * @package    BudPay
+ * @package    Budpay/WooCommerce
  */
 
 declare(strict_types=1);
 
 defined( 'ABSPATH' ) || exit;
+
+require_once __DIR__ . '/util/class-budpay-logger.php';
 
 /**
  * BudPay x WooCommerce Integration Class.
@@ -72,7 +74,28 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @var WC_Logger the logger.
 	 */
-	private WC_Logger $logger;
+	private Budpay_Logger $logger;
+
+	/**
+	 * Base Url
+	 *
+	 * @var string the base url
+	 */
+	private string $base_url;
+
+	/**
+	 * Payment Style
+	 *
+	 * @var string the payment style
+	 */
+	private string $payment_style;
+
+	/**
+	 * Country
+	 *
+	 * @var string the country
+	 */
+	private string $country;
 
 	/**
 	 * Constructor.
@@ -97,18 +120,17 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$this->test_secret_key     = $this->get_option( 'test_secret_key' );
 		$this->live_public_key     = $this->get_option( 'live_public_key' );
 		$this->live_secret_key     = $this->get_option( 'live_secret_key' );
-		$this->auto_complete_order = get_option( 'autocomplete_order' );
+		$this->auto_complete_order = $this->get_option( 'autocomplete_order' );
 		$this->go_live             = $this->get_option( 'go_live' );
 		$this->payment_style       = $this->get_option( 'payment_style' );
 		$this->country             = '';
-		self::$log_enabled         = $this->logging_option;
 		$this->supports            = array(
 			'products',
 		);
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
-		add_action( 'woocommerce_api_budpay_payment_gateway', array( $this, 'budpay_verify_payment' ) );
+		add_action( 'woocommerce_api_wc_budpay_payment_gateway', array( $this, 'budpay_verify_payment' ) );
 
 		// Webhook listener/API hook.
 		add_action( 'woocommerce_api_budpay_payment_webhook', array( $this, 'budpay_notification_handler' ) );
@@ -124,10 +146,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			$this->public_key = $this->live_public_key;
 			$this->secret_key = $this->live_secret_key;
 		}
-
 		$this->logger = Budpay_Logger::instance();
-
-		$this->sdk = null;
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 	}
@@ -137,7 +156,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 		?>
-		<h3 class="budpay__heading"><?php esc_attr_e( 'Budpay', 'budpay' ); ?></h3>
+		<img class="budpay__heading" src="https://merchant.budpay.com/assets/front/img/BudPay-Logo3.png" alt="budpay" width="250px" />
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">
@@ -265,6 +284,15 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get Secret Key
+	 *
+	 * @return string
+	 */
+	public function get_secret_key(): string {
+		return $this->secret_key;
+	}
+
+	/**
 	 * Order id
 	 *
 	 * @param int $order_id  Order id.
@@ -278,7 +306,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		try {
 			$budpay_request = ( new BudPay_Request() )->get_prepared_payload( $order, $this->get_secret_key() );
-			$this->logger->log( 'Budpay: Generating Payment link for order :' . $order_id );
+			$this->logger->info( 'Budpay: Generating Payment link for order :' . $order_id );
 		} catch ( \InvalidArgumentException $budpay_request_error ) {
 			wc_add_notice( $budpay_request_error, 'error' );
 			// redirect user to check out page.
@@ -294,9 +322,25 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		// Initiate Communication with Budpay.
 
+		$body = wp_json_encode( $budpay_request );
+
+		$this->logger->info( $body );
+
+		$args = array(
+			'method'  => 'POST',
+			'headers' => array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Bearer ' . $this->get_secret_key(),
+			),
+			'body'    => $body,
+		);
+
+		$response = wp_safe_remote_request( $this->base_url . 'transaction/initialize', $args );
+
 		if ( ! is_wp_error( $response ) ) {
 			// TODO: Get customer id.
-			$this->logger->info( 'Budpay: redirecting customer to the payment link.' );
+			$this->logger->info( 'Budpay: redirecting customer to the payment link :' . $response->data->authorization_url );
+			$this->logger->info( $response['body'] );
 			$response = json_decode( $response['body'] );
 			return array(
 				'result'   => 'success',
@@ -304,7 +348,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		} else {
 			wc_add_notice( 'Unable to Connect to Budpay.', 'error' );
-			$this->logger->info( 'Budpay: Unable to Connect to Budpay.' );
+			$this->logger->error( 'Budpay: Unable to Connect to Budpay. API Response: ' . $response->get_error_message() );
 			// TODO: handle responses based on error status code : https://devs.budpay.com/responses.
 			// redirect user to check out page.
 			return array(
@@ -437,6 +481,25 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Check Amount Equals.
+	 *
+	 * Checks to see whether the given amounts are equal using a proper floating
+	 * point comparison with an Epsilon which ensures that insignificant decimal
+	 * places are ignored in the comparison.
+	 *
+	 * eg. 100.00 is equal to 100.0001
+	 *
+	 * @param Float $amount1 1st amount for comparison.
+	 * @param Float $amount2  2nd amount for comparison.
+	 * @since 2.3.3
+	 * @return bool
+	 */
+	public function amounts_equal( $amount1, $amount2 ): bool {
+		return ! ( abs( floatval( $amount1 ) - floatval( $amount2 ) ) > BUDPAY_EPSILON );
+	}
+
+
+	/**
 	 * Verify payment made on the checkout page
 	 *
 	 * @return void
@@ -447,15 +510,107 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$logger     = $this->logger;
 
 		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) ) ) {
-			if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] ) {
+			if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && isset( $_GET['order_id'] ) ) {
 				// TODO: Cancel the payment.
+				$order_id = urldecode( sanitize_text_field( wp_unslash( $_GET['order_id'] ) ) ) ?? sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
+				$order_id = intval( $order_id );
+				$order    = wc_get_order( $order_id );
+
+				if ( $order instanceof WC_Order ) {
+					$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
+					$order->update_status( 'cancelled' );
+					$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
+					$admin_note .= esc_html__( 'Please, confirm from the order notes that there is no note of a successful transaction. If there is, this means that the user was debited and you either have to give value for the transaction or refund the customer.', 'budpay' );
+					$order->add_order_note( $admin_note );
+				}
 				header( 'Location: ' . wc_get_cart_url() );
 				die();
 			}
 		}
 
-		if ( isset( $_POST['tx_ref'] ) || isset( $_GET['tx_ref'] ) ) {
+		if ( isset( $_POST['reference'] ) || isset( $_GET['reference'] ) ) {
 			// TODO: handle transaction verification.
+			$txn_ref  = urldecode( sanitize_text_field( wp_unslash( $_GET['reference'] ) ) ) ?? sanitize_text_field( wp_unslash( $_POST['reference'] ) );
+			$o        = explode( '_', sanitize_text_field( $txn_ref ) );
+			$order_id = intval( $o[1] );
+			$order    = wc_get_order( $order_id );
+
+			// Communicate with Budpay to confirm payment.
+			$max_attempts = 3;
+			$attempt      = 0;
+			$success      = false;
+
+			while ( $attempt < $max_attempts && ! $success ) {
+				$args = array(
+					'method'  => 'GET',
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $this->get_secret_key(),
+					),
+				);
+
+				$order->add_order_note( esc_html__( 'verifying the Payment of Budpay...', 'budpay' ) );
+
+				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify' . $txn_ref, $args );
+
+				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+					// Request successful.
+					$success = true;
+				} else {
+					// Retry.
+					++$attempt;
+					usleep( 500000 ); // Wait for 5 milli seconds before retrying (adjust as needed).
+				}
+			}
+
+			if ( ! $success ) {
+				// Get the transaction from your DB using the transaction reference (txref)
+				// Queue it for requery. Preferably using a queue system. The requery should be about 15 minutes after.
+				// Ask the customer to contact your support and you should escalate this issue to the Budpaye support team. Send this as an email and as a notification on the page. just incase the page timesout or disconnects.
+				$order->add_order_note( esc_html__( 'The payment didn\'t return a valid response. It could have timed out or abandoned by the customer on Budpaye', 'budpay' ) );
+				$order->update_status( 'on-hold' );
+				$customer_note  = 'Thank you for your order.<br>';
+				$customer_note .= 'We had an issue confirming your payment, but we have put your order <strong>on-hold</strong>. ';
+				$customer_note .= esc_html__( 'Please, contact us for information regarding this order.', 'budpay' );
+				$admin_note     = esc_html__( 'Attention: New order has been placed on hold because we could not get a definite response from the payment gateway. Kindly contact the Budpay support team at developers@budpay.com to confirm the payment.', 'budpay' ) . ' <br>';
+				$admin_note    .= esc_html__( 'Payment Reference: ', 'budpay' ) . $txn_ref;
+
+				$order->add_order_note( $customer_note, 1 );
+				$order->add_order_note( $admin_note );
+
+				wc_add_notice( $customer_note, 'notice' );
+				$this->logger->error( 'Failed to verify transaction ' . $txn_ref . ' after multiple attempts.' );
+			} else {
+				// Transaction verified successfully.
+				// Proceed with setting the payment on hold.
+				$response = json_decode( $response['body'] );
+				if ( (bool) $response->data->status ) {
+					$amount = (float) $response->amount;
+					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
+						$this->order->update_status( 'on-hold' );
+						$customer_note  = 'Thank you for your order.<br>';
+						$customer_note .= 'Your payment successfully went through, but we have to put your order <strong>on-hold</strong> ';
+						$customer_note .= 'because the we couldn\t verify your order. Please, contact us for information regarding this order.';
+						$admin_note     = esc_html__( 'Attention: New order has been placed on hold because of incorrect payment amount or currency. Please, look into it.', 'budpay' ) . '<br>';
+						$admin_note    .= esc_html__( 'Amount paid: ', 'budpay' ) . $response->data->currency . ' ' . $amount . ' <br>' . esc_html__( 'Order amount: ', 'budpay' ) . $order->get_currency() . ' ' . $order->get_total() . ' <br>' . esc_html__( ' Reference: ', 'budpay' ) . $response->data->reference;
+						$order->add_order_note( $customer_note, 1 );
+						$order->add_order_note( $admin_note );
+					} else {
+						$order->payment_complete( $order->get_id() );
+						if ( 'yes' === $this->auto_complete_order ) {
+							$order->update_status( 'completed' );
+						}
+						$order->add_order_note( 'Payment was successful on Budpay' );
+						$order->add_order_note( 'Budpay  reference: ' . $txn_ref );
+
+						$customer_note  = 'Thank you for your order.<br>';
+						$customer_note .= 'Your payment was successful, we are now <strong>processing</strong> your order.';
+						$order->add_order_note( $customer_note, 1 );
+					}
+				}
+			}
+			wc_add_notice( $customer_note, 'notice' );
+			WC()->cart->empty_cart();
 
 			$redirect_url = $this->get_return_url( $order );
 			header( 'Location: ' . $redirect_url );
@@ -470,5 +625,95 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$public_key = $this->public_key;
 		$secret_key = $this->secret_key;
 		$logger     = $this->logger;
+
+		$public_key = $this->public_key;
+		$secret_key = $this->secret_key;
+		$sdk        = $this->sdk;
+
+		$event = file_get_contents( 'php://input' );
+
+		http_response_code( 200 );
+		$event = json_decode( $event );
+
+		if ( empty( $event->notify ) && empty( $event->data ) ) {
+			wp_send_json(
+				array(
+					'status'  => 'error',
+					'message' => 'Webhook sent is deformed. missing data object.',
+				),
+				WP_Http::NO_CONTENT
+			);
+		}
+
+		if ( 'test_assess' === $event->notify ) {
+			wp_send_json(
+				array(
+					'status'  => 'success',
+					'message' => 'Webhook Test Successful. handler is accessible',
+				),
+				WP_Http::OK
+			);
+		}
+
+		if ( 'transaction' === $event->notify ) {
+			sleep( 6 );
+
+			$event_type = $event['notifyType'];
+			$event_data = $event->data;
+
+			// check if transaction reference starts with WOO on hpos enabled.
+			if ( substr( $event_data->reference, 0, 4 ) !== 'WOO' ) {
+				wp_send_json(
+					array(
+						'status'  => 'failed',
+						'message' => 'The transaction reference ' . $event_data->tx_ref . ' is not a Budpay WooCommerce Generated transaction',
+					),
+					WP_Http::OK
+				);
+			}
+
+			$txn_ref  = sanitize_text_field( $event_data->tx_ref );
+			$o        = explode( '_', $txn_ref );
+			$order_id = intval( $o[1] );
+			$order    = wc_get_order( $order_id );
+			// get order status.
+			$current_order_status = $order->get_status();
+
+			/**
+			 * Fires after the webhook has been processed.
+			 *
+			 * @param string $event The webhook event.
+			 * @since 1.0.0
+			 */
+			do_action( 'budpay_webhook_after_action', wp_json_encode( $event, true ) );
+			// TODO: Handle Checkout draft status for WooCommerce Blocks users.
+			$statuses_in_question = array( 'pending', 'on-hold' );
+			if ( 'failed' === $current_order_status ) {
+				// NOTE: customer must have tried to make payment again in the same session.
+				// TODO: add timeline to order notes to brief merchant as to why the order status changed.
+				$statuses_in_question[] = 'failed';
+			}
+			if ( ! in_array( $current_order_status, $statuses_in_question, true ) ) {
+				wp_send_json(
+					array(
+						'status'  => 'error',
+						'message' => 'Order already processed',
+					),
+					WP_Http::CREATED
+				);
+			}
+
+			// TODO: Verify transaction and give value.
+			wp_send_json(
+				array(
+					'status'  => 'success',
+					'message' => 'Order Processed Successfully',
+				),
+				WP_Http::CREATED
+			);
+		}
+
+		wp_safe_redirect( home_url() );
+		exit();
 	}
 }

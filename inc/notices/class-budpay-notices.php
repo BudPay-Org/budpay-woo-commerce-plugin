@@ -2,8 +2,8 @@
 /**
  * Class BudPay_Notices
  *
- * @package    BudPay\WooCommerce
- * @subpackage BudPay/inc/notices
+ * @package    Budpay/WooCommerce
+ * @subpackage Budpay/WooCommerce/notices
  */
 
 defined( 'ABSPATH' ) || exit;
