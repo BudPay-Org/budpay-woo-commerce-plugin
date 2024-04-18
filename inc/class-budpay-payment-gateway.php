@@ -559,7 +559,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				} else {
 					// Retry.
 					++$attempt;
-					usleep( 500000 ); // Wait for 5 milli seconds before retrying (adjust as needed).
+					usleep( 500000 ); // Wait for 5 micro seconds before retrying (adjust as needed).
 				}
 			}
 
