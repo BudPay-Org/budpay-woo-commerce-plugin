@@ -26,7 +26,7 @@ class Budpay_Request {
 	 *  Pointer to gateway making the request.
 	 */
 	public function __construct() {
-		$this->notify_url = WC()->api_request_url( 'Budpay_Payment_Gateway' );
+		$this->notify_url = WC()->api_request_url( 'WC_Budpay_Payment_Gateway' );
 	}
 
 	/**
