@@ -17,7 +17,7 @@ jQuery( function ( $ ) {
         message: '<p> Please wait...</p>' 
     }); 
 
-    setTimeout($.unblockUI, 1000);
+    setTimeout($.unblockUI, 4000);
 	// $.blockUI({message: '<p> Please wait...</p>'});
 	let payment_made = false;
 	const redirectPost = function (location, args) {
@@ -51,26 +51,26 @@ jQuery( function ( $ ) {
                     });
 					redirectPost(flw_payment_args.redirect_url + "?reference=" + tr, response);
 				}
-				this.close(); // close modal
+				this.onClose(); // close modal
 			},
-			onclose: function () {
+			onClose: function () {
 				$.unblockUI();
 				if (payment_made) {
 					$.blockUI({ 
                         ...style, 
-                        message: '<p> confirming transaction ...</p>'
+                        message: '<p> Confirming Transaction</p>'
                     });
-					redirectPost(flw_payment_args.redirect_url + "?reference=" + flw_payment_args.reference, {});
+					redirectPost(budpay_args.redirect_url + "?reference=" + budpay_args.reference, {});
 				} else {
 					$.blockUI({
                         ...style,
-                        message: '<p> Canceling Payment ...</p>'
+                        message: '<p> Canceling Payment</p>'
                     });
-					window.location.href = flw_payment_args.cancel_url;
+					window.location.href = budpay_args.cancel_url;
 				}
 			}
 		}
 	}
 	let payload = processData();
-	let x = window.BudPayCheckout(payload);
+	let x = BudPayCheckout(payload);
 } );

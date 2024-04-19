@@ -242,7 +242,6 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				'type'        => 'select',
 				'description' => __( 'Optional - Choice of payment style to use. Either inline or redirect. (Default: inline)', 'budpay' ),
 				'options'     => array(
-					'inline'   => esc_html_x( 'Popup(Keep payment experience on the website)', 'payment_style', 'budpay' ),
 					'redirect' => esc_html_x( 'Redirect', 'payment_style', 'budpay' ),
 				),
 				'default'     => 'redirect',
@@ -529,11 +528,11 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( isset( $_POST['reference'] ) || isset( $_GET['reference'] ) ) {
-			// TODO: handle transaction verification.
 			$txn_ref  = urldecode( sanitize_text_field( wp_unslash( $_GET['reference'] ) ) ) ?? sanitize_text_field( wp_unslash( $_POST['reference'] ) );
 			$o        = explode( '_', sanitize_text_field( $txn_ref ) );
 			$order_id = intval( $o[1] );
 			$order    = wc_get_order( $order_id );
+			$sec_key  = $this->get_secret_key();
 
 			// Communicate with Budpay to confirm payment.
 			$max_attempts = 3;
@@ -545,13 +544,13 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 					'method'  => 'GET',
 					'headers' => array(
 						'Content-Type'  => 'application/json',
-						'Authorization' => 'Bearer ' . $this->get_secret_key(),
+						'Authorization' => 'Bearer ' . $sec_key,
 					),
 				);
 
 				$order->add_order_note( esc_html__( 'verifying the Payment of Budpay...', 'budpay' ) );
 
-				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify:' . $txn_ref, $args );
+				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify/:' . $txn_ref, $args );
 
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					// Request successful.
@@ -584,10 +583,11 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				// Transaction verified successfully.
 				// Proceed with setting the payment on hold.
 				$response = json_decode( $response['body'] );
+				$this->logger->info( wp_json_encode( $response ) );
 				if ( (bool) $response->data->status ) {
-					$amount = (float) $response->amount;
+					$amount = (float) $response->data->amount;
 					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
-						$this->order->update_status( 'on-hold' );
+						$order->update_status( 'on-hold' );
 						$customer_note  = 'Thank you for your order.<br>';
 						$customer_note .= 'Your payment successfully went through, but we have to put your order <strong>on-hold</strong> ';
 						$customer_note .= 'because the we couldn\t verify your order. Please, contact us for information regarding this order.';
