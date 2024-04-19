@@ -636,6 +636,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$event = json_decode( $event );
 
 		if ( empty( $event->notify ) && empty( $event->data ) ) {
+			$this->logger->info( wp_json_encode( $event->data ) );
 			wp_send_json(
 				array(
 					'status'  => 'error',

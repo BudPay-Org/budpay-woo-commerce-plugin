@@ -63,3 +63,28 @@ function budpay_woocommerce_blocks_support() {
 
 // add woocommerce block support.
 add_action( 'woocommerce_blocks_loaded', 'budpay_woocommerce_blocks_support' );
+
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
+);
+
+/**
+ * Add the Settings link to the plugin
+ *
+ * @param  array $links Existing links on the plugin page.
+ *
+ * @return array Existing links with our settings link added
+ */
+function budpay_plugin_action_links( array $links ): array {
+
+	$budpay_settings_url = esc_url( get_admin_url( null, 'admin.php?page=wc-settings&tab=checkout&section=budpay' ) );
+	array_unshift( $links, "<a title='BudPay Settings Page' href='$budpay_settings_url'>Configure</a>" );
+
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'budpay_plugin_action_links' );
