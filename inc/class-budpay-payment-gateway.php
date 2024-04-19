@@ -551,7 +551,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 				$order->add_order_note( esc_html__( 'verifying the Payment of Budpay...', 'budpay' ) );
 
-				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify' . $txn_ref, $args );
+				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify:' . $txn_ref, $args );
 
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					// Request successful.
@@ -559,7 +559,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				} else {
 					// Retry.
 					++$attempt;
-					usleep( 500000 ); // Wait for 5 micro seconds before retrying (adjust as needed).
+					usleep( 2000000 ); // Wait for 2 seconds before retrying (adjust as needed).
 				}
 			}
 
