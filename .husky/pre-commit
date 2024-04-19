@@ -1,3 +1,5 @@
 #!/bin/sh
 
 ./vendor/bin/phpcs inc/ budpay.php
+
+echo $HOME
