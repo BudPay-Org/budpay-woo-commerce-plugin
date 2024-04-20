@@ -51,7 +51,7 @@
     "@automattic/color-studio": "^2.6.0",
     "@formatjs/icu-messageformat-parser": "^2.7.6",
     "@svgr/cli": "^8.1.0",
-    "@woocommerce/dependency-extraction-webpack-plugin": "^2.4.0",
+    "@woocommerce/dependency-extraction-webpack-plugin": "^2.2.0",
     "@woocommerce/eslint-plugin": "^2.2.0",
     "@wordpress/env": "^9.8.0",
     "@wordpress/prettier-config": "^3.13.0",

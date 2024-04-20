@@ -33,6 +33,8 @@ const CLIENT_DIR = path.resolve( __dirname, 'assets' );
 
 const entry = {
 	index: CLIENT_DIR + '/blocks/index.js',
+	settings: CLIENT_DIR + '/admin/settings/index.js',
+	editor: CLIENT_DIR + '/admin/editor/index.js'
 };
 
 const rules = [
