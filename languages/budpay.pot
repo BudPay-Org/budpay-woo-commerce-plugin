@@ -1,0 +1,274 @@
+# Copyright (C) 2024 Budpay Devs
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: BudPay 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/budpay\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-04-20T18:18:55+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: budpay\n"
+
+#. Plugin Name of the plugin
+#: budpay.php
+msgid "BudPay"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: budpay.php
+msgid "https://devs.budpay.com/"
+msgstr ""
+
+#. Description of the plugin
+#: budpay.php
+msgid "This plugin is the official plugin of Budpay."
+msgstr ""
+
+#. Author of the plugin
+#: budpay.php
+msgid "Budpay Devs"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:156
+msgid "Visa"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:160
+msgid "American Express"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:164
+msgid "Mastercard"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:171
+msgctxt "Name of credit card"
+msgid "Discover"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:175
+msgid "JCB"
+msgstr ""
+
+#: inc/block/class-budpay-block-support.php:179
+msgid "Diners"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:111
+msgid "allows you to receive payments in 190+ countries."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:163
+msgid "Webhook Instruction"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:167
+msgid "Please add this webhook URL and paste on the webhook section on your dashboard"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:188
+msgid "Enable/Disable"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:189
+msgid "Enable Budpay"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:191
+msgid "Enable Budpay as a payment option on the checkout page"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:196
+msgid "Payment method title"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:198
+#: inc/class-budpay-payment-gateway.php:204
+msgid "Optional"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:202
+msgid "Payment method description"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:208
+msgid "Test Public Key"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:210
+msgid "Required! Enter your Budpay test public key here"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:214
+msgid "Test Secret Key"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:216
+msgid "Required! Enter your Budpay test secret key here"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:220
+msgid "Live Public Key"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:222
+msgid "Required! Enter your Budpay live public key here"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:226
+msgid "Live Secret Key"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:228
+msgid "Required! Enter your Budpay live secret key here"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:232
+msgid "Autocomplete Order After Payment"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:233
+msgid "Autocomplete Order"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:236
+msgid "If enabled, the order will be marked as complete after successful payment"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:241
+msgid "Payment Style on checkout"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:243
+msgid "Optional - Choice of payment style to use. Either inline or redirect. (Default: inline)"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:245
+msgctxt "payment_style"
+msgid "Redirect"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:250
+msgid "Mode"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:251
+msgid "Live mode"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:253
+msgid "Check this box if you're using your live keys."
+msgstr ""
+
+#. translators: %s: url
+#: inc/class-budpay-payment-gateway.php:373
+msgid "For Budpay on appear on checkout. Please <a href=\"%s\">set your Budpay API keys</a> to be able to accept payments."
+msgstr ""
+
+#. translators: %s: shop cart url
+#: inc/class-budpay-payment-gateway.php:409
+msgid "Sorry, your session has expired. <a href=\"%s\" class=\"wc-backward\">Return to shop</a>"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:423
+msgid "We were unable to process your order, please try again."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:470
+msgid "Order Payment"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:519
+msgid "The customer clicked on the cancel button on Checkout."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:521
+msgid "Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. "
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:522
+msgid "Please, confirm from the order notes that there is no note of a successful transaction. If there is, this means that the user was debited and you either have to give value for the transaction or refund the customer."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:551
+msgid "verifying the Payment of Budpay..."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:569
+msgid "The payment didn't return a valid response. It could have timed out or abandoned by the customer on Budpaye"
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:573
+msgid "Please, contact us for information regarding this order."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:574
+msgid "Attention: New order has been placed on hold because we could not get a definite response from the payment gateway. Kindly contact the Budpay support team at developers@budpay.com to confirm the payment."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:575
+msgid "Payment Reference: "
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:594
+msgid "Attention: New order has been placed on hold because of incorrect payment amount or currency. Please, look into it."
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:595
+msgid "Amount paid: "
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:595
+msgid "Order amount: "
+msgstr ""
+
+#: inc/class-budpay-payment-gateway.php:595
+msgid " Reference: "
+msgstr ""
+
+#. translators: $1. Minimum WooCommerce version. $2. Current WooCommerce version.
+#: inc/notices/class-budpay-notices.php:31
+msgid "BudPay requires WooCommerce %1$s or greater to be installed and activated. kindly upgrade to a higher version of WooCommerce. WooCommerce version %2$s is not supported."
+msgstr ""
+
+#. Translators: %s Plugin name.
+#: inc/views/html-admin-missing-woocommerce.php:15
+msgid "%s requires WooCommerce to be installed and activated in order to serve updates."
+msgstr ""
+
+#. Translators: %s Plugin name.
+#: inc/views/html-admin-missing-woocommerce.php:15
+#: assets/blocks/payment-method/index.js:32
+msgid "Budpay"
+msgstr ""
+
+#: inc/views/html-admin-missing-woocommerce.php:25
+msgid "Activate WooCommerce"
+msgstr ""
+
+#: inc/views/html-admin-missing-woocommerce.php:28
+#: inc/views/html-admin-missing-woocommerce.php:42
+msgid "Deactivate Budpay"
+msgstr ""
+
+#: inc/views/html-admin-missing-woocommerce.php:40
+msgid "Install WooCommerce"
+msgstr ""
+
+#: assets/blocks/payment-method/index.js:19
+msgid "You may be redirected to a secure page to complete your payment."
+msgstr ""
+
+#: assets/blocks/payment-method/index.js:38
+msgid "Proceed to Budpay"
+msgstr ""
+
+#: assets/blocks/payment-method/index.js:44
+msgid "Payment via Budpay"
+msgstr ""
