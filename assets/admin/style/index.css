@@ -1,0 +1,81 @@
+.budpay-page-banner {
+    /* TODO: handle on small screens. */
+    background-image: url(https://merchant.budpay.com/assets/front/img/payment.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right
+}
+
+.budpay-page {
+	margin: 0 auto;
+
+	&.is-narrow {
+		max-width: 550px;
+	}
+
+    font-family: 'Sora', sans-serif !important;
+}
+
+.budpay-page h2 {
+    font-size: 20px;
+    line-height: 28px;
+    margin: 0;
+}
+
+.bupay-page__heading {
+    padding: 24px 24px 0;
+}
+
+.budpay-font-heading {
+    color: #0e073a;
+    font-size: 1.2rem;
+}
+
+img.budpay__settings_logo {
+    margin-bottom: 2px;
+    width: 150px;
+    /* height: 24px; */
+}
+
+.budpay-page__buttons {
+    padding: 24px;
+    margin-left: 15px;
+}
+
+.budpay-page__sandbox-mode-panel .components-panel__body.is-opened, 
+.budpday-page__general_settings-panel .components-panel__body.is-opened,
+.budpay-page__checkout_settings-panel .components-panel__body.is-opened
+{
+    padding: 24px;
+
+}
+
+.budpday-page__general_settings-panel h2.components-panel__body-title button,
+.budpay-page__checkout_settings-panel h2.components-panel__body-title button
+{
+    font-weight: bold;
+}
+
+.budpday-page__general_settings-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: .5em;
+}
+
+.budpday-settings__inputs {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.5em
+}
+
+.budpay-settings-cta {
+    margin-top: 1em;
+}
+
+
+
+
+

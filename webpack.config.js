@@ -3,18 +3,22 @@
  */
 
 const path = require( 'path' );
-const webpack = require( 'webpack' );
+const { ProvidePlugin } = require( 'webpack' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const WooCommerceDependencyExtractionWebpackPlugin = require( '@woocommerce/dependency-extraction-webpack-plugin' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 const wcDepMap = {
 	'@woocommerce/blocks-registry': ['wc', 'wcBlocksRegistry'],
-	'@woocommerce/settings'       : ['wc', 'wcSettings']
+	'@woocommerce/settings'       : ['wc', 'wcSettings'],
+	// '@woocommerce/icons'       : ['wc', 'wcIcons'],
+
 };
 
 const wcHandleMap = {
 	'@woocommerce/blocks-registry': 'wc-blocks-registry',
-	'@woocommerce/settings'       : 'wc-settings'
+	'@woocommerce/settings'       : 'wc-settings',
+	// '@woocommerce/icons'		  : 'wc-icons'
 };
 
 const requestToExternal = (request) => {
@@ -42,13 +46,19 @@ const rules = [
 		test: /\.(png|jpg|svg|jpeg|gif|ico)$/,
 		use: {
 			loader: 'file-loader',
-			options: {
-				name: 'img/[name].[ext]',
-				publicPath:
-					'production' === process.env.NODE_ENV ? '../' : '../../',
-			},
 		},
 	},
+	{
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
+        ],
+      },
 ];
 
 module.exports = {
@@ -82,6 +92,10 @@ module.exports = {
 				requestToHandle
 			}
 		),
+		new ProvidePlugin( {
+			process: 'process/browser.js',
+		} ),
+		new MiniCssExtractPlugin( { filename: 'style.css' } ),
 	],
 	resolve: {
 		extensions: [ '.json', '.js', '.jsx' ],
@@ -91,4 +105,23 @@ module.exports = {
 		},
 	},
 	entry,
+
+	module: {
+		...defaultConfig.module,
+		rules: [
+			...defaultConfig.module.rules,
+			{
+				test: /\.s[ac]ss$/i,
+				use: [
+				  MiniCssExtractPlugin.loader,
+				  // Creates `style` nodes from JS strings
+				  "style-loader",
+				  // Translates CSS into CommonJS
+				  "css-loader",
+				  // Compiles Sass to CSS
+				  "sass-loader",
+				],
+			  },
+		],
+	},
 };

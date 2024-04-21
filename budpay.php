@@ -15,6 +15,7 @@
  * WC tested up to: 2.3
  * Requires at least: 5.8
  * Requires PHP: 7.4
+ * Requires Plugins: woocommerce
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -31,9 +32,29 @@ if ( ! defined( 'BUDPAY_PLUGIN_FILE' ) ) {
 }
 
 /**
+ * Add the Settings link to the plugin
+ *
+ * @param  array $links Existing links on the plugin page.
+ *
+ * @return array Existing links with our settings link added
+ */
+function budpay_plugin_action_links( array $links ): array {
+
+	$budpay_settings_url = esc_url( get_admin_url( null, 'admin.php?page=wc-settings&tab=checkout&section=budpay' ) );
+	array_unshift( $links, "<a title='BudPay Settings Page' href='$budpay_settings_url'>Configure</a>" );
+
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'budpay_plugin_action_links' );
+
+/**
  * Initialize Budpay.
  */
 function budpay_bootstrap() {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
+
 	if ( ! class_exists( 'Budpay' ) ) {
 		include_once dirname( BUDPAY_PLUGIN_FILE ) . '/inc/class-budpay.php';
 		// Global for backwards compatibility.
@@ -44,11 +65,74 @@ function budpay_bootstrap() {
 add_action( 'plugins_loaded', 'budpay_bootstrap', 99 );
 
 /**
+ * Register the admin JS.
+ */
+function budpay_add_extension_register_script() {
+
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
+
+	if ( ! class_exists( 'Automattic\WooCommerce\Admin\Loader' ) && version_compare( WC_VERSION, '6.3', '<' ) && ! \Automattic\WooCommerce\Admin\Loader::is_admin_or_embed_page() ) {
+		return;
+	}
+
+	if ( ! class_exists( 'Automattic\WooCommerce\Admin\Loader' ) && version_compare( WC_VERSION, '6.3', '>=' ) && ! \Automattic\WooCommerce\Admin\PageController::is_admin_or_embed_page() ) {
+		return;
+	}
+
+	$script_path       = '/build/settings.js';
+	$script_asset_path = dirname( BUDPAY_PLUGIN_FILE ) . '/build/settings.asset.php';
+	$script_asset      = file_exists( $script_asset_path )
+		? require_once $script_asset_path
+		: array(
+			'dependencies' => array(),
+			'version'      => BUDPAY_VERSION,
+		);
+
+	wp_register_script(
+		'budpay-admin-js',
+		plugins_url( 'build/settings.js', BUDPAY_PLUGIN_FILE ),
+		array_merge( array( 'wp-element', 'wp-data', 'moment' ), $script_asset['dependencies'] ),
+		$script_asset['version'],
+		true
+	);
+
+	wp_localize_script(
+		'budpay-admin-js',
+		'budpayData',
+		array(
+			'asset_plugin_url' => plugins_url( '', BUDPAY_PLUGIN_FILE ),
+			'asset_plugin_dir' => plugins_url( '', BUDPAY_PLUGIN_DIR ),
+			'budpay_logo'      => plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ),
+		)
+	);
+
+	wp_enqueue_script( 'budpay-admin-js' );
+
+	wp_register_style(
+		'budpay_admin_css',
+		plugins_url( 'assets/admin/style/index.css', BUDPAY_PLUGIN_FILE ),
+		array(),
+		BUDPAY_VERSION
+	);
+
+	wp_enqueue_style( 'budpay_admin_css' );
+}
+
+add_action( 'admin_enqueue_scripts', 'budpay_add_extension_register_script' );
+
+
+/**
  * Register the Budpay payment gateway for WooCommerce Blocks.
  *
  * @return void
  */
 function budpay_woocommerce_blocks_support() {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return;
+	}
+
 	if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
 		require_once dirname( BUDPAY_PLUGIN_FILE ) . '/inc/block/class-budpay-block-support.php';
 		add_action(
@@ -72,19 +156,3 @@ add_action(
 		}
 	}
 );
-
-/**
- * Add the Settings link to the plugin
- *
- * @param  array $links Existing links on the plugin page.
- *
- * @return array Existing links with our settings link added
- */
-function budpay_plugin_action_links( array $links ): array {
-
-	$budpay_settings_url = esc_url( get_admin_url( null, 'admin.php?page=wc-settings&tab=checkout&section=budpay' ) );
-	array_unshift( $links, "<a title='BudPay Settings Page' href='$budpay_settings_url'>Configure</a>" );
-
-	return $links;
-}
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'budpay_plugin_action_links' );

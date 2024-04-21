@@ -20,7 +20,7 @@
     },
     "scripts": {
         "makepot-audit": [
-            "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,vendor,bin,node_modules,tests,docs\" --slug=budpay --debug"
+            "wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,vendor,bin,node_modules,tests\" --slug=budpay --debug"
         ],
         "makepot": [
             "@makepot-audit --skip-audit"
