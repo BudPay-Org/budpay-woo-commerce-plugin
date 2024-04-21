@@ -98,6 +98,8 @@ function budpay_add_extension_register_script() {
 		true
 	);
 
+	$budpay_default_settings = get_option( 'woocommerce_budpay_settings', array() );
+
 	wp_localize_script(
 		'budpay-admin-js',
 		'budpayData',
@@ -105,6 +107,7 @@ function budpay_add_extension_register_script() {
 			'asset_plugin_url' => plugins_url( '', BUDPAY_PLUGIN_FILE ),
 			'asset_plugin_dir' => plugins_url( '', BUDPAY_PLUGIN_DIR ),
 			'budpay_logo'      => plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ),
+			'budpay_defaults'  => $budpay_default_settings,
 		)
 	);
 

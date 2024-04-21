@@ -22,7 +22,7 @@ export default {
 	heading: ( firstName ) =>
 		sprintf(
 			/* translators: %s: first name of the merchant, if it exists, %s: BudPay. */
-			__( 'Hi%s, Welcome to %s!', 'budpay' ),
+			__( 'Hi%s,\n Welcome to %s!', 'budpay' ),
 			firstName ? ` ${ firstName }` : '',
 			'Budpay'
 		),

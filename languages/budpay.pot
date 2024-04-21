@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-21T20:01:08+00:00\n"
+"POT-Creation-Date: 2024-04-21T20:44:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: budpay\n"
@@ -314,6 +314,8 @@ msgid "Offer card payments"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:44
+#: build/settings.js:2
+#: build/settings.js:320
 msgid "Test Mode: I'm setting up a store for someone else."
 msgstr ""
 
@@ -409,9 +411,4 @@ msgstr ""
 #: build/index.js:1
 #: build/index.js:126
 msgid "Payment via Budpay"
-msgstr ""
-
-#: build/settings.js:2
-#: build/settings.js:320
-msgid "I'm setting up a store for someone else."
 msgstr ""

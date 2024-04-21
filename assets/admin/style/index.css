@@ -63,6 +63,12 @@ img.budpay__settings_logo {
     gap: .5em;
 }
 
+.budpay-settings-btn-center {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
 .budpday-settings__inputs {
     display: flex;
     flex-direction: column-reverse;
@@ -73,6 +79,22 @@ img.budpay__settings_logo {
 
 .budpay-settings-cta {
     margin-top: 1em;
+    align-self: center;
+}
+
+.budpay-webhook-instructions {
+    margin-top: 2em !important;
+    margin-bottom: .5em;
+    text-align: center !important;
+    /* font-weight: bold !important; */
+}
+
+.budpay-webhook-link {
+    display: block;
+    text-align: center;
+    color: #0e073a !important;
+    margin-top: 2em !important;
+    font-weight: bold !important;
 }
 
 
