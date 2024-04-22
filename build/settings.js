@@ -775,14 +775,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/.pnpm/classnames@2.5.1/node_modules/classnames/index.js");
 /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @woocommerce/navigation */ "@woocommerce/navigation");
-/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _woocommerce_components__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @woocommerce/components */ "@woocommerce/components");
-/* harmony import */ var _woocommerce_components__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_woocommerce_components__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @woocommerce/navigation */ "@woocommerce/navigation");
+/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _woocommerce_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @woocommerce/components */ "@woocommerce/components");
+/* harmony import */ var _woocommerce_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_woocommerce_components__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _wordpress_url__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @wordpress/url */ "@wordpress/url");
@@ -814,19 +814,24 @@ __webpack_require__.r(__webpack_exports__);
 
 // import { CheckoutIcon, EyeIcon } from 'wcbudpay/admin/icons';
 
+const NAMESPACE = "budpay/v1";
+const ENDPOINT = "/settings";
 
+_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9___default()({
+  path: NAMESPACE + ENDPOINT
+}).then(configuration => console.log(configuration));
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
 const BudpaySettings = () => {
   /** Initial Values */
-  const [shouldAutoComplete, setShouldAutoComplete] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [openGeneralPanel, setOpenGeneralPanel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [shouldAutoComplete, setShouldAutoComplete] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  const [openGeneralPanel, setOpenGeneralPanel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
   ;
   const firstName = wcSettings.admin?.currentUserData?.first_name || 'there';
   const BUDPAY_LOGO_URL = budpayData?.budpay_logo;
   const default_settings = budpayData?.budpay_defaults;
-  const [budpaySettings, setBudPaySettings] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(default_settings);
+  const [budpaySettings, setBudPaySettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(default_settings);
   const payment_style_on_checkout_options = [{
     label: 'Redirect',
     value: 'redirect'
@@ -841,7 +846,7 @@ const BudpaySettings = () => {
 
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_page__WEBPACK_IMPORTED_MODULE_12__["default"], {
     isNarrow: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Card, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Card, {
     className: "budpay-page-banner"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bupay-page__heading"
@@ -858,19 +863,19 @@ const BudpaySettings = () => {
     }
   }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].heading(firstName))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpay-page__buttons"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "primary",
     isBusy: false,
     disabled: false,
     onClick: () => setOpenGeneralPanel(true)
-  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.get_started))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Panel, {
+  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.get_started))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
     className: "budpday-page__general_settings-panel"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: _strings__WEBPACK_IMPORTED_MODULE_11__["default"].settings.general,
     initialOpen: openGeneralPanel
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpday-settings__general"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.ToggleControl, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ToggleControl, {
     checked: budpaySettings.enabled == 'yes',
     label: "Enable Budpay",
     onChange: () => console.log("Toggle")
@@ -883,34 +888,41 @@ const BudpaySettings = () => {
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_13__["default"], {
     labelName: "Public Key",
     initialValue: budpaySettings.live_public_key
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalText, {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalText, {
     className: "budpay-webhook-link",
     numberOfLines: 1
-  }, "https://8000-bajoski34-budpay-dc8esoaz6is.ws-eu110.gitpod.io/?wc-api=Budpay_Payment_Webhook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.__experimentalText, {
+  }, "https://8000-bajoski34-budpay-dc8esoaz6is.ws-eu110.gitpod.io/?wc-api=Budpay_Payment_Webhook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalText, {
     className: "budpay-webhook-instructions",
     numberOfLines: 1
   }, "Please add this webhook URL and paste on the webhook section on your dashboard.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpay-settings-btn-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "budpay-settings-cta",
     variant: "secondary",
     isBusy: false,
     disabled: false,
     onClick: () => console.log('no')
-  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Panel, {
+  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
     className: "budpay-page__checkout_settings-panel"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: _strings__WEBPACK_IMPORTED_MODULE_11__["default"].settings.checkout
     // icon={ CheckoutIcon }
     ,
     initialOpen: false
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpday-settings__inputs"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.CheckboxControl, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.CheckboxControl, {
     checked: budpaySettings.autocomplete_order == 'yes',
     help: "should we complete the order on a confirmed payment?",
     label: "Autocomplete Order After Payment",
-    onChange: setBudPaySettings(budpaySettings => {})
+    onChange: () => setBudPaySettings(budpaySettings => {
+      console.log(budpaySettings);
+      let newValue = budpaySettings.autocomplete_order == 'yes' ? 'no' : 'yes';
+      return {
+        ...setBudPaySettings,
+        autocomplete_order: newValue
+      };
+    })
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_13__["default"], {
     labelName: "Payment method Title",
     initialValue: budpaySettings.title
@@ -920,15 +932,15 @@ const BudpaySettings = () => {
     options: payment_style_on_checkout_options
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpay-settings-btn-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "budpay-settings-cta",
     variant: "secondary",
     isBusy: false,
     disabled: false,
     onClick: () => console.log('no')
-  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Panel, {
+  }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
     className: "budpay-page__sandbox-mode-panel"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.PanelBody, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
     title: _strings__WEBPACK_IMPORTED_MODULE_11__["default"].sandboxMode.title,
     initialOpen: false
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].sandboxMode.description), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -940,7 +952,7 @@ const BudpaySettings = () => {
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_13__["default"], {
     labelName: "Test Public Key",
     initialValue: budpaySettings.test_public_key
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     className: "budpay-settings-cta",
     variant: "secondary",
     isBusy: false,
@@ -958,7 +970,7 @@ const BudpaySettings = () => {
   return pages;
 });
 const BudPayNav = () => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_6__.WooNavigationItem, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__.WooNavigationItem, {
     parentMenu: "budpay-root",
     item: "budpay-1"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {

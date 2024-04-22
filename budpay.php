@@ -93,12 +93,23 @@ function budpay_add_extension_register_script() {
 	wp_register_script(
 		'budpay-admin-js',
 		plugins_url( 'build/settings.js', BUDPAY_PLUGIN_FILE ),
-		array_merge( array( 'wp-element', 'wp-data', 'moment' ), $script_asset['dependencies'] ),
+		array_merge( array( 'wp-element', 'wp-data', 'moment', 'wp-api' ), $script_asset['dependencies'] ),
 		$script_asset['version'],
 		true
 	);
 
-	$budpay_default_settings = get_option( 'woocommerce_budpay_settings', array() );
+	$budpay_fallback_settings = array(
+		'enabled'            => 'no',
+		'go_live'            => 'no',
+		'title'              => 'BudPay',
+		'live_public_key'    => 'pk_XXXXXXXXXXXX',
+		'live_secret_hash'   => '',
+		'test_public_key'    => 'pk_XXXXXXXXXXXX',
+		'test_secret_hash'   => '',
+		'autocomplete_order' => 'no',
+	);
+
+	$budpay_default_settings = get_option( 'woocommerce_budpay_settings', $budpay_fallback_settings );
 
 	wp_localize_script(
 		'budpay-admin-js',

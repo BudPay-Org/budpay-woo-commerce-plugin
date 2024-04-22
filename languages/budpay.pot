@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-21T20:44:21+00:00\n"
+"POT-Creation-Date: 2024-04-22T01:08:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: budpay\n"
@@ -233,11 +233,11 @@ msgid " Reference: "
 msgstr ""
 
 #. Translators: %s Plugin name.
-#: inc/class-budpay.php:151
+#: inc/class-budpay.php:159
 #: inc/views/html-admin-missing-woocommerce.php:15
 #: assets/blocks/payment-method/index.js:32
-#: build/index.js:1
-#: build/index.js:114
+#: build/index.js:71
+#: build/index.js:34
 msgid "Budpay"
 msgstr ""
 
@@ -265,150 +265,152 @@ msgid "Install WooCommerce"
 msgstr ""
 
 #: assets/admin/components/error-boundary/index.jsx:34
-#: build/settings.js:6
-#: build/settings.js:464
+#: build/settings.js:244
+#: build/settings.js:197
 msgid "There was an error rendering this view. Please contact support for assistance if the problem persists."
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:12
-#: build/settings.js:1
-#: build/settings.js:288
+#: build/settings.js:397
+#: build/settings.js:298
 msgid "Get Started!"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:16
-#: build/settings.js:1
-#: build/settings.js:292
+#: build/settings.js:398
+#: build/settings.js:302
 msgid "Save Configuration"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:20
-#: build/settings.js:1
-#: build/settings.js:296
+#: build/settings.js:399
+#: build/settings.js:306
 msgid "Enable Test mode"
 msgstr ""
 
 #. translators: %s: first name of the merchant, if it exists, %s: BudPay.
 #: assets/admin/settings/strings.jsx:25
-#: build/settings.js:2
-#: build/settings.js:301
-msgid "Hi%s, Welcome to %s!"
+#: build/settings.js:402
+#: build/settings.js:311
+msgid ""
+"Hi%s,\n"
+" Welcome to %s!"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:30
-#: build/settings.js:2
-#: build/settings.js:306
+#: build/settings.js:404
+#: build/settings.js:316
 msgid "API/Webhook Settings"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:34
-#: build/settings.js:2
-#: build/settings.js:310
+#: build/settings.js:405
+#: build/settings.js:320
 msgid "Checkout Settings"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:39
-#: build/settings.js:2
-#: build/settings.js:315
+#: build/settings.js:407
+#: build/settings.js:325
 msgid "Offer card payments"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:44
-#: build/settings.js:2
-#: build/settings.js:320
+#: build/settings.js:409
+#: build/settings.js:330
 msgid "Test Mode: I'm setting up a store for someone else."
 msgstr ""
 
 #. translators: %s: Budpay
 #: assets/admin/settings/strings.jsx:50
-#: build/settings.js:3
-#: build/settings.js:326
+#: build/settings.js:411
+#: build/settings.js:336
 msgid "This option will set up %s in test mode. When you’re ready to launch your store, switching to live payments is easy."
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:58
-#: build/settings.js:3
-#: build/settings.js:334
+#: build/settings.js:414
+#: build/settings.js:344
 msgid "Test mode is enabled, only test credentials can be used to make payments. If you want to process live transactions, please {{learnMoreLink}}disable it{{/learnMoreLink}}."
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:75
-#: build/settings.js:3
-#: build/settings.js:351
+#: build/settings.js:427
+#: build/settings.js:361
 msgid "enable collection."
 msgstr ""
 
 #. translators: %s: Budpay
 #: assets/admin/settings/strings.jsx:80
-#: build/settings.js:4
-#: build/settings.js:356
+#: build/settings.js:431
+#: build/settings.js:366
 msgid "Verifying your information with %s"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:85
-#: build/settings.js:4
-#: build/settings.js:361
+#: build/settings.js:433
+#: build/settings.js:371
 msgid "You’re only steps away from getting paid"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:90
-#: build/settings.js:4
-#: build/settings.js:366
+#: build/settings.js:435
+#: build/settings.js:376
 msgid "Create and connect your account"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:94
-#: build/settings.js:4
-#: build/settings.js:370
+#: build/settings.js:436
+#: build/settings.js:380
 msgid "To ensure safe and secure transactions, a WordPress.com account is required."
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:100
-#: build/settings.js:4
-#: build/settings.js:376
+#: build/settings.js:439
+#: build/settings.js:386
 msgid "Setup complete!"
 msgstr ""
 
 #. translators: %s: Budpay
 #: assets/admin/settings/strings.jsx:103
-#: build/settings.js:5
-#: build/settings.js:379
+#: build/settings.js:441
+#: build/settings.js:389
 msgid "You’re ready to start using the features and benefits of %s."
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:110
-#: build/settings.js:5
-#: build/settings.js:386
+#: build/settings.js:443
+#: build/settings.js:396
 msgid "We've temporarily paused new account creation. We'll notify you when we resume!"
 msgstr ""
 
 #: assets/admin/settings/strings.jsx:117
-#: build/settings.js:5
-#: build/settings.js:393
+#: build/settings.js:445
+#: build/settings.js:403
 msgid "*See <a>Terms and Conditions</a> for details."
 msgstr ""
 
 #. translators: %1$s: Budpay
 #: assets/admin/settings/strings.jsx:136
-#: build/settings.js:6
-#: build/settings.js:412
+#: build/settings.js:456
+#: build/settings.js:422
 msgid "<b>%1$s is not currently available in your location</b>."
 msgstr ""
 
 #: assets/blocks/payment-method/index.js:19
-#: build/index.js:1
-#: build/index.js:101
+#: build/index.js:57
+#: build/index.js:21
 msgid "You may be redirected to a secure page to complete your payment."
 msgstr ""
 
 #: assets/blocks/payment-method/index.js:38
-#: build/index.js:1
-#: build/index.js:120
+#: build/index.js:73
+#: build/index.js:40
 msgid "Proceed to Budpay"
 msgstr ""
 
 #: assets/blocks/payment-method/index.js:44
-#: build/index.js:1
-#: build/index.js:126
+#: build/index.js:74
+#: build/index.js:46
 msgid "Payment via Budpay"
 msgstr ""

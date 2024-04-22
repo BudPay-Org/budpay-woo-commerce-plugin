@@ -2,7 +2,7 @@ import { registerPlugin } from "@wordpress/plugins";
 import { addFilter } from "@wordpress/hooks";
 import { __ } from '@wordpress/i18n';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from '@wordpress/element';
 // import { sanitizeHTML } from '@woocommerce/utils';
 // import { RawHTML } from '@wordpress/element';
 // Example of RawHTML and sanitize HTML: https://github.com/Saggre/woocommerce/blob/e38ffc8427ec4cc401d90482939bae4cddb69d7c/plugins/woocommerce-blocks/assets/js/extensions/payment-methods/bacs/index.js#L24
@@ -36,7 +36,12 @@ import Page from 'wcbudpay/admin/components/page';
 import Input, { CustomSelectControl } from 'wcbudpay/admin/components/input';
 // import { CheckoutIcon, EyeIcon } from 'wcbudpay/admin/icons';
 
+const NAMESPACE = "budpay/v1";
+const ENDPOINT = "/settings";
+
 import './index.scss';
+
+apiFetch({ path: NAMESPACE + ENDPOINT }).then((configuration) => console.log(configuration));
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
@@ -144,9 +149,11 @@ const BudpaySettings = () => {
 							checked={ budpaySettings.autocomplete_order == 'yes' }
 							help="should we complete the order on a confirmed payment?"
 							label="Autocomplete Order After Payment"
-							onChange={ setBudPaySettings( (budpaySettings) => {
-									
-							} ) }
+							onChange={ () => setBudPaySettings( (budpaySettings) => {
+								console.log(budpaySettings);
+								let newValue = (budpaySettings.autocomplete_order == 'yes') ? 'no' : 'yes';
+								return { ...setBudPaySettings, autocomplete_order: newValue };
+						} ) }
 						/>
 						<Input labelName="Payment method Title" initialValue={ budpaySettings.title } />
 						<CustomSelectControl labelName="Payment Style on Checkout" initialValue={ budpaySettings.payment_style } options={ payment_style_on_checkout_options } />

@@ -123,6 +123,10 @@ class BudPay {
 		add_action( 'admin_menu', array( $this, 'add_wc_admin_menu' ) );
 		$this->register_budpay_wc_page_items();
 		$this->register_payment_gateway();
+
+		include_once BUDPAY_PLUGIN_DIR . 'inc/rest-api/class-budpay-settings-rest-controller.php';
+		$settings__endpoint = new Budpay_Settings_Rest_Controller();
+		add_action( 'rest_api_init', array( $settings__endpoint, 'register_routes' ) );
 	}
 
 	/**
