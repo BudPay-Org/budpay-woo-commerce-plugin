@@ -823,6 +823,9 @@ _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9___default()({
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
+const BudpayNotice = ({
+  message
+}) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Snackbar, null, message);
 const BudpaySettings = () => {
   /** Initial Values */
   const [shouldAutoComplete, setShouldAutoComplete] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
@@ -901,7 +904,22 @@ const BudpaySettings = () => {
     variant: "secondary",
     isBusy: false,
     disabled: false,
-    onClick: () => console.log('no')
+    onClick: () => {
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_9___default()({
+        path: NAMESPACE + ENDPOINT,
+        method: 'POST',
+        data: budpaySettings // Send the updated settings to the server
+      }).then(response => {
+        console.log('Settings saved successfully:', response);
+        // Optionally, you can update the UI or show a success message here
+        (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(BudpayNotice, {
+          message: 'Settings saved successfully:'
+        });
+      }).catch(error => {
+        console.error('Error saving settings:', error);
+        // Handle errors if any
+      });
+    }
   }, _strings__WEBPACK_IMPORTED_MODULE_11__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
     className: "budpay-page__checkout_settings-panel"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {

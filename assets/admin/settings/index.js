@@ -17,6 +17,7 @@ import {
 	CardHeader,
 	CardBody,
 	CardFooter,
+	Snackbar,
 	CheckboxControl,
 	ToggleControl,
 	__experimentalText as Text,
@@ -44,6 +45,10 @@ import './index.scss';
 apiFetch({ path: NAMESPACE + ENDPOINT }).then((configuration) => console.log(configuration));
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
+
+const BudpayNotice = ({ message }) => (
+	<Snackbar>{ message }</Snackbar>
+);
 
 const BudpaySettings = () => {
 	/** Initial Values */
@@ -120,7 +125,21 @@ const BudpaySettings = () => {
 							variant="secondary"
 							isBusy={ false }
 							disabled={ false }
-							onClick={ () => console.log('no') }
+							onClick={ () => {
+								apiFetch({
+									path: NAMESPACE + ENDPOINT,
+									method: 'POST',
+									data: budpaySettings // Send the updated settings to the server
+								}).then(response => {
+									console.log('Settings saved successfully:', response);
+									// Optionally, you can update the UI or show a success message here
+									<BudpayNotice message={ 'Settings saved successfully:' }  />
+
+								}).catch(error => {
+									console.error('Error saving settings:', error);
+									// Handle errors if any
+								});
+							} }
 						>
 							{ strings.button.save_settings }
 						</Button>
