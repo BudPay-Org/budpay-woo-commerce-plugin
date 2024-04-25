@@ -40,7 +40,7 @@ if ( ! defined( 'BUDPAY_PLUGIN_FILE' ) ) {
  */
 function budpay_plugin_action_links( array $links ): array {
 
-	$budpay_settings_url = esc_url( get_admin_url( null, 'admin.php?page=wc-settings&tab=checkout&section=budpay' ) );
+	$budpay_settings_url = esc_url( get_admin_url( null, 'admin.php?page=wc-admin&path=%2Fbudpay' ) );
 	array_unshift( $links, "<a title='BudPay Settings Page' href='$budpay_settings_url'>Configure</a>" );
 
 	return $links;
