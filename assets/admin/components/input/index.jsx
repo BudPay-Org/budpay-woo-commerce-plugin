@@ -1,5 +1,5 @@
 import { __experimentalInputControl as InputControl, SelectControl } from '@wordpress/components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import { useState } from '@wordpress/element';
 
 export const CustomSelectControl = ({ labelName, initalValue, options  }) => {
@@ -30,16 +30,25 @@ export const InputWithSideLabel = ({ initialValue, labelName, isConfidential }) 
    )
 }
 
-const Input = ({ initialValue, labelName, isConfidential }) => {
+const Input = ({ initialValue, labelName, onChange,  isConfidential }) => {
   const isHidden = isConfidential || false;
   const [ value, setValue ] = useState( initialValue );
+
+  const handleValueChange = (evt) => {
+   onChange(evt)
+   setValue(evt)
+  }
+
+  useEffect(()=>{
+
+  },[value]);
 
   return (
      <InputControl
         label={ labelName || '{{label_name}}'}
         value={ value }
         type={ (isHidden)? 'password' : 'text' }
-        onChange={ ( nextValue ) => setValue( nextValue ?? '' ) }
+        onChange={ evt => handleValueChange(evt) }
      />
   );
 };
