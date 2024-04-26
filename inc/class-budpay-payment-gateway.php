@@ -510,7 +510,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) ) ) {
 			if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && isset( $_GET['order_id'] ) ) {
-				// TODO: Cancel the payment.
+				// Cancel the payment.
 				$order_id = urldecode( sanitize_text_field( wp_unslash( $_GET['order_id'] ) ) ) ?? sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
 				$order_id = intval( $order_id );
 				$order    = wc_get_order( $order_id );
@@ -625,9 +625,6 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$public_key = $this->public_key;
 		$secret_key = $this->secret_key;
 		$logger     = $this->logger;
-
-		$public_key = $this->public_key;
-		$secret_key = $this->secret_key;
 		$sdk        = $this->sdk;
 
 		$event = file_get_contents( 'php://input' );
@@ -704,7 +701,72 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				);
 			}
 
-			// TODO: Verify transaction and give value.
+			// Verify transaction and give value.
+			// Communicate with Budpay to confirm payment.
+			$max_attempts = 3;
+			$attempt      = 0;
+			$success      = false;
+
+			while ( $attempt < $max_attempts && ! $success ) {
+				$args = array(
+					'method'  => 'GET',
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $secret_key,
+					),
+				);
+
+				$order->add_order_note( esc_html__( 'verifying the Payment of Budpay...', 'budpay' ) );
+
+				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify/:' . $txn_ref, $args );
+
+				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+					// Request successful.
+					$success = true;
+				} else {
+					// Retry.
+					++$attempt;
+					usleep( 2000000 ); // Wait for 2 seconds before retrying (adjust as needed).
+				}
+			}
+
+			if ( ! $success ) {
+				// Get the transaction from your DB using the transaction reference (txref)
+				// Queue it for requery. Preferably using a queue system. The requery should be about 15 minutes after.
+				// Ask the customer to contact your support and you should escalate this issue to the Budpaye support team. Send this as an email and as a notification on the page. just incase the page timesout or disconnects.
+				$order->add_order_note( esc_html__( 'The payment didn\'t return a valid response. It could have timed out or abandoned by the customer on Budpay', 'budpay' ) );
+				$order->update_status( 'on-hold' );
+				$admin_note  = esc_html__( 'Attention: New order has been placed on hold because we could not get a definite response from the payment gateway. Kindly contact the Budpay support team at developers@budpay.com to confirm the payment.', 'budpay' ) . ' <br>';
+				$admin_note .= esc_html__( 'Payment Reference: ', 'budpay' ) . $txn_ref;
+				$order->add_order_note( $admin_note );
+				$this->logger->error( 'Failed to verify transaction ' . $txn_ref . ' after multiple attempts.' );
+			} else {
+				// Transaction verified successfully.
+				// Proceed with setting the payment on hold.
+				$response = json_decode( $response['body'] );
+				$this->logger->info( wp_json_encode( $response ) );
+				if ( (bool) $response->data->status ) {
+					$amount = (float) $response->data->amount;
+					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
+						$order->update_status( 'on-hold' );
+						$admin_note  = esc_html__( 'Attention: New order has been placed on hold because of incorrect payment amount or currency. Please, look into it.', 'budpay' ) . '<br>';
+						$admin_note .= esc_html__( 'Amount paid: ', 'budpay' ) . $response->data->currency . ' ' . $amount . ' <br>' . esc_html__( 'Order amount: ', 'budpay' ) . $order->get_currency() . ' ' . $order->get_total() . ' <br>' . esc_html__( ' Reference: ', 'budpay' ) . $response->data->reference;
+						$order->add_order_note( $admin_note );
+					} else {
+						$order->payment_complete( $order->get_id() );
+						if ( 'yes' === $this->auto_complete_order ) {
+							$order->update_status( 'completed' );
+						}
+						$order->add_order_note( 'Payment was successful on Budpay' );
+						$order->add_order_note( 'Budpay  reference: ' . $txn_ref );
+
+						$customer_note  = 'Thank you for your order.<br>';
+						$customer_note .= 'Your payment was successful, we are now <strong>processing</strong> your order.';
+						$order->add_order_note( $customer_note, 1 );
+					}
+				}
+			}
+
 			wp_send_json(
 				array(
 					'status'  => 'success',

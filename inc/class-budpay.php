@@ -120,6 +120,8 @@ class BudPay {
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
+		add_action( 'admin_head', array( $this, 'budpay_favicon' ) );
+
 		add_action( 'admin_menu', array( $this, 'add_wc_admin_menu' ) );
 		$this->register_budpay_wc_page_items();
 		$this->register_payment_gateway();
@@ -159,8 +161,25 @@ class BudPay {
 					'is_top_level' => true,
 					'menuId'       => 'plugins',
 				),
+				'position' => 3,
+				'icon'     => 'dashicons-budpay',
 			)
 		);
+	}
+
+	/**
+	 * Include Budpay Icon for Sidebar Setup.
+	 */
+	public static function budpay_favicon() {
+		echo '
+			<style>
+			.dashicons-budpay {
+				background-image: url("' . esc_url( plugins_url( 'assets/img/budpay-30x30.png', BUDPAY_PLUGIN_FILE ) ) . '");
+				background-repeat: no-repeat;
+				background-position: center; 
+			}
+			</style>
+		';
 	}
 
 	/**
