@@ -47,6 +47,26 @@ apiFetch({ path: NAMESPACE + ENDPOINT }).then((configuration) => console.log(con
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
+const EnableTestModeButton = ({ onClick, isDestructive, isBusy, children}) => {
+	const [ isRed, setIsRed ] = useState(isDestructive);
+	useEffect(() => {}, [isDestructive]);
+	return (
+		<Button
+			className="budpay-settings-cta"
+			variant="secondary"
+			isBusy={ isBusy }
+			disabled={ false }
+			isDestructive={ isRed }
+			onClick={ () => {
+				onClick()
+				setIsRed(!isRed)
+			} }
+			>
+			{children}
+		</Button>
+	)
+}
+
 const BudpayNotice = ({ style, message }) => (
 	<Snackbar style={style}>{ message }</Snackbar>
 );
@@ -142,7 +162,7 @@ const BudpaySettings = () => {
 								label="Enable Budpay"
 								onChange={() => setBudPaySettings( prevSettings => ({
 									...prevSettings,
-									enabled: prevSettings.enabled === 'yes' ? 'no' : 'yes' // Toggle the value
+									enabled: prevSettings.enabled == 'yes' ? 'no' : 'yes' // Toggle the value
 								}) )}
 							/>
 							
@@ -170,6 +190,10 @@ const BudpaySettings = () => {
 									apiFetch({
 										path: NAMESPACE + ENDPOINT,
 										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json',
+											'X-WP-Nonce': wpApiSettings.nonce,
+										},
 										data: budpaySettings // Send the updated settings to the server
 									}).then(response => {
 										console.log('Settings saved successfully:', response);
@@ -210,7 +234,7 @@ const BudpaySettings = () => {
 								label="Autocomplete Order After Payment"
 								onChange={ () => setBudPaySettings( prevSettings => ({
 									...prevSettings,
-									autocomplete_order: prevSettings.autocomplete_order === 'yes' ? 'no' : 'yes' // Toggle the value
+									autocomplete_order: prevSettings.autocomplete_order == 'yes' ? 'no' : 'yes' // Toggle the value
 								}) ) }
 							/>
 							<Input labelName="Payment method Title" initialValue={ budpaySettings.title } />
@@ -227,6 +251,10 @@ const BudpaySettings = () => {
 									apiFetch({
 										path: NAMESPACE + ENDPOINT,
 										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json',
+											'X-WP-Nonce': wpApiSettings.nonce,
+										},
 										data: budpaySettings // Send the updated settings to the server
 									}).then(response => {
 										console.log('Settings saved successfully:', response);
@@ -253,18 +281,28 @@ const BudpaySettings = () => {
 							<Input labelName="Test Secret Key" initialValue={ budpaySettings.test_secret_key } onChange={ handleTestSecretKeyChange }  isConfidential />
 							<Input labelName="Test Public Key" initialValue={ budpaySettings.test_public_key } onChange={ handleTestPublicKeyChange }  />
 						</div>
-						<Button
+						<EnableTestModeButton
 							className="budpay-settings-cta"
 							variant="secondary"
 							isBusy={ false }
 							disabled={ false }
+							isDestructive={ budpaySettings.go_live == 'yes' }
 							onClick={ () => {
+								setBudPaySettings( prevSettings => ({
+									...prevSettings,
+									go_live: (prevSettings.go_live == 'yes') ? 'no' : 'yes' // Toggle the value
+								}) )
+
 								apiFetch({
 									path: NAMESPACE + ENDPOINT,
 									method: 'POST',
-									data: budpaySettings // Send the updated settings to the server
+									headers: {
+										'Content-Type': 'application/json',
+										'X-WP-Nonce': wpApiSettings.nonce,
+									},
+									data: { ...budpaySettings, go_live: (prevSettings.go_live == 'yes') ? 'no' : 'yes'  } // Send the updated settings to the server
 								}).then(response => {
-									console.log('Settings saved successfully:', response);
+									console.log('Test mode enabled successfully:', response);
 									// Optionally, you can update the UI or show a success message here
 								}).catch(error => {
 									console.error('Error saving settings:', error);
@@ -272,12 +310,11 @@ const BudpaySettings = () => {
 								});
 							} }
 						>
-							{ strings.button.test_mode }
-						</Button>
+							{ (budpaySettings.go_live === 'yes') ?  strings.button.enable_test_mode: strings.button.disable_test_mode  }
+						</EnableTestModeButton>
 					</PanelBody>
 				</Panel>
 			</Page>
-			
 
 			{/* <BudpayNotice message={ 'Settings saved successfully:' }  /> */}
 			{/* <AnimatedBudpayNotice  style={{

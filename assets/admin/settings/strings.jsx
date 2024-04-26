@@ -17,7 +17,8 @@ export default {
 			'Save Configuration',
 			'budpay'
 		),
-		test_mode: __( 'Enable Test mode', 'budpay' ),
+		enable_test_mode: __( 'Enable Test mode', 'budpay' ),
+		disable_test_mode: __( 'Disable Test mode', 'budpay' ),
 	},
 	heading: ( firstName ) =>
 		sprintf(
