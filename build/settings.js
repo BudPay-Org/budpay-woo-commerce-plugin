@@ -1,6 +1,1089 @@
-(()=>{var e={500:(e,t)=>{var n;!function(){"use strict";var a={}.hasOwnProperty;function o(){for(var e="",t=0;t<arguments.length;t++){var n=arguments[t];n&&(e=s(e,r(n)))}return e}function r(e){if("string"==typeof e||"number"==typeof e)return e;if("object"!=typeof e)return"";if(Array.isArray(e))return o.apply(null,e);if(e.toString!==Object.prototype.toString&&!e.toString.toString().includes("[native code]"))return e.toString();var t="";for(var n in e)a.call(e,n)&&e[n]&&(t=s(t,n));return t}function s(e,t){return t?e?e+" "+t:e+t:e}e.exports?(o.default=o,e.exports=o):void 0===(n=function(){return o}.apply(t,[]))||(e.exports=n)}()}},t={};function n(a){var o=t[a];if(void 0!==o)return o.exports;var r=t[a]={exports:{}};return e[a](r,r.exports,n),r.exports}n.n=e=>{var t=e&&e.__esModule?()=>e.default:()=>e;return n.d(t,{a:t}),t},n.d=(e,t)=>{for(var a in t)n.o(t,a)&&!n.o(e,a)&&Object.defineProperty(e,a,{enumerable:!0,get:t[a]})},n.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{"use strict";const e=window.React,t=window.wp.plugins,a=window.wp.hooks,o=window.wp.i18n;n(500);const r=window.wp.element,s=window.wp.components,i=window.wc.navigation,l=window.wp.apiFetch;var c=n.n(l);function p(e){return e.startsWith("{{/")?{type:"componentClose",value:e.replace(/\W/g,"")}:e.endsWith("/}}")?{type:"componentSelfClosing",value:e.replace(/\W/g,"")}:e.startsWith("{{")?{type:"componentOpen",value:e.replace(/\W/g,"")}:{type:"string",value:e}}function u(t,n){let a,o,r=[];for(let e=0;e<t.length;e++){const s=t[e];if("string"!==s.type){if(void 0===n[s.value])throw new Error(`Invalid interpolation, missing component node: \`${s.value}\``);if("object"!=typeof n[s.value])throw new Error(`Invalid interpolation, component node must be a ReactElement or null: \`${s.value}\``);if("componentClose"===s.type)throw new Error(`Missing opening component token: \`${s.value}\``);if("componentOpen"===s.type){a=n[s.value],o=e;break}r.push(n[s.value])}else r.push(s.value)}if(a){const s=function(e,t){const n=t[e];let a=0;for(let o=e+1;o<t.length;o++){const e=t[o];if(e.value===n.value){if("componentOpen"===e.type){a++;continue}if("componentClose"===e.type){if(0===a)return o;a--}}}throw new Error("Missing closing component token `"+n.value+"`")}(o,t),i=u(t.slice(o+1,s),n),l=(0,e.cloneElement)(a,{},i);if(r.push(l),s<t.length-1){const e=u(t.slice(s+1),n);r=r.concat(e)}}return r=r.filter(Boolean),0===r.length?null:1===r.length?r[0]:(0,e.createElement)(e.Fragment,null,...r)}const d={button:{get_started:(0,o.__)("Get Started!","budpay"),save_settings:(0,o.__)("Save Configuration","budpay"),enable_test_mode:(0,o.__)("Enable Test mode","budpay"),disable_test_mode:(0,o.__)("Disable Test mode","budpay")},heading:e=>(0,o.sprintf)(/* translators: %s: first name of the merchant, if it exists, %s: BudPay. */ /* translators: %s: first name of the merchant, if it exists, %s: BudPay. */
-(0,o.__)("Hi%s,\n Welcome to %s!","budpay"),e?` ${e}`:"","Budpay"),settings:{general:(0,o.__)("API/Webhook Settings","budpay"),checkout:(0,o.__)("Checkout Settings","budpay")},card:(0,o.__)("Offer card payments","budpay"),sandboxMode:{title:(0,o.__)("Test Mode: I'm setting up a store for someone else.","budpay"),description:(0,o.sprintf)(/* translators: %s: Budpay */ /* translators: %s: Budpay */
-(0,o.__)("This option will set up %s in test mode. When you’re ready to launch your store, switching to live payments is easy.","budpay"),"Budpay")},testModeNotice:function(e){const{mixedString:t,components:n,throwErrors:a}=e;if(!n)return t;if("object"!=typeof n){if(a)throw new Error(`Interpolation Error: unable to process \`${t}\` because components is not an object`);return t}const o=function(e){return e.split(/(\{\{\/?\s*\w+\s*\/?\}\})/g).map(p)}(t);try{return u(o,n)}catch(e){if(a)throw new Error(`Interpolation Error: unable to process \`${t}\` because of error \`${e.message}\``);return t}}({mixedString:(0,o.__)("Test mode is enabled, only test credentials can be used to make payments. If you want to process live transactions, please {{learnMoreLink}}disable it{{/learnMoreLink}}.","budpay"),components:{learnMoreLink:(0,e.createElement)("a",{href:"#",target:"_blank",rel:"noreferrer"})}}),infoNotice:{button:(0,o.__)("enable collection.","budpay")},infoModal:{title:(0,o.sprintf)(/* translators: %s: Budpay */ /* translators: %s: Budpay */
-(0,o.__)("Verifying your information with %s","budpay"),"Budpay")},stepsHeading:(0,o.__)("You’re only steps away from getting paid","budpay"),step1:{heading:(0,o.__)("Create and connect your account","budpay"),description:(0,o.__)("To ensure safe and secure transactions, a WordPress.com account is required.","budpay")},step3:{heading:(0,o.__)("Setup complete!","budpay"),description:(0,o.sprintf)(/* translators: %s: Budpay */ /* translators: %s: Budpay */
-(0,o.__)("You’re ready to start using the features and benefits of %s.","budpay"),"Budpay")},onboardingDisabled:(0,o.__)("We've temporarily paused new account creation. We'll notify you when we resume!","budpay"),incentive:{termsAndConditions:t=>(0,r.createInterpolateElement)((0,o.__)("*See <a>Terms and Conditions</a> for details.","budpay"),{a:(0,e.createElement)("a",{href:t,target:"_blank",rel:"noopener noreferrer"})})},nonSupportedCountry:(0,r.createInterpolateElement)((0,o.sprintf)(/* translators: %1$s: Budpay */ /* translators: %1$s: Budpay */
-(0,o.__)("<b>%1$s is not currently available in your location</b>.","budpay"),"Budpay"),{b:(0,e.createElement)("b",null),a:(0,e.createElement)("a",{href:"#",target:"_blank",rel:"noopener noreferrer"})})};class m extends r.Component{constructor(){super(...arguments),this.state={error:null}}static getDerivedStateFromError(e){return{error:e}}componentDidCatch(e,t){this.props.onError&&this.props.onError(e,t)}render(){return this.state.error?(0,e.createElement)("div",null,(0,o.__)("There was an error rendering this view. Please contact support for assistance if the problem persists.","budpay"),(0,e.createElement)("br",null),this.state.error.toString()):this.props.children}}const y=m,b=({children:t,maxWidth:n,isNarrow:a,className:o=""})=>{const r=n?{maxWidth:n}:void 0,s=[o,"budpay-page"];return a&&s.push("is-narrow"),(0,e.createElement)("div",{className:s.join(" "),style:r},(0,e.createElement)(y,null,t))},g=({labelName:t,initalValue:n,options:a})=>{const[o,r]=(0,e.useState)(n);return(0,e.createElement)(s.SelectControl,{label:t||"{{ No Label Added }}",value:o,options:a,onChange:r})},_=({initialValue:t,labelName:n,onChange:a,isConfidential:o})=>{const r=o||!1,[i,l]=(0,e.useState)(t);return(0,e.useEffect)((()=>{}),[i]),(0,e.createElement)(s.__experimentalInputControl,{label:n||"{{label_name}}",value:i,type:r?"password":"text",onChange:e=>(e=>{a(e),l(e)})(e)})},h="budpay/v1",f="/settings";c()({path:h+f}).then((e=>console.log(e)));const v=({onClick:t,isDestructive:n,isBusy:a,children:o})=>{const[i,l]=(0,r.useState)(n);return(0,r.useEffect)((()=>{}),[n]),(0,e.createElement)(s.Button,{className:"budpay-settings-cta",variant:"secondary",isBusy:a,disabled:!1,isDestructive:i,onClick:()=>{t(),l(!i)}},o)},E=()=>{const t=budpayData?.budpay_defaults,[n,a]=(0,r.useState)(!1),o=wcSettings.admin?.currentUserData?.first_name||"there",i=budpayData?.budpay_logo,[l,p]=(0,r.useState)(t),[u,m]=(0,r.useState)(!1),[y,E]=(0,r.useState)(!1);let w={};""!=o&&(w.whiteSpaceCollapse="preserve-breaks");const k=(e,t)=>{p((n=>({...n,[e]:t})))};return(0,e.createElement)(r.Fragment,null,(0,e.createElement)(b,{isNarrow:!0},(0,e.createElement)(s.Card,{className:"budpay-page-banner"},(0,e.createElement)("div",{className:"bupay-page__heading"},(0,e.createElement)("img",{className:"budpay__settings_logo",alt:"budpay-logo",src:i,id:"budpay__settings_logo"}),(0,e.createElement)("h2",{className:"budpay-font-heading",style:{marginLeft:"15px",...w}},d.heading(o))),(0,e.createElement)("div",{className:"budpay-page__buttons"},(0,e.createElement)(s.Button,{variant:"primary",isBusy:!1,disabled:u,onClick:()=>{a(!0),m(!1)}},d.button.get_started))),(0,e.createElement)(s.Panel,{className:"budpday-page__general_settings-panel"},(0,e.createElement)(s.PanelBody,{title:d.settings.general,initialOpen:n},(0,e.createElement)("div",{className:"budpday-settings__general"},(0,e.createElement)(s.ToggleControl,{checked:"yes"==l.enabled,label:"Enable Budpay",onChange:()=>p((e=>({...e,enabled:"yes"==e.enabled?"no":"yes"})))}),(0,e.createElement)("div",{className:"budpday-settings__inputs"},(0,e.createElement)(_,{labelName:"Secret Key",initialValue:l.live_secret_key,onChange:e=>{k("live_secret_key",e)},isConfidential:!0}),(0,e.createElement)(_,{labelName:"Public Key",initialValue:l.live_public_key,onChange:e=>{k("live_public_key",e)}})),(0,e.createElement)(s.__experimentalText,{className:"budpay-webhook-link",numberOfLines:1},"https://8000-bajoski34-budpay-dc8esoaz6is.ws-eu110.gitpod.io/?wc-api=Budpay_Payment_Webhook"),(0,e.createElement)(s.__experimentalText,{className:"budpay-webhook-instructions",numberOfLines:1},"Please add this webhook URL and paste on the webhook section on your dashboard.")),(0,e.createElement)("div",{className:"budpay-settings-btn-center"},(0,e.createElement)(s.Button,{className:"budpay-settings-cta",variant:"secondary",isBusy:!1,disabled:!1,onClick:()=>{c()({path:h+f,method:"POST",headers:{"Content-Type":"application/json","X-WP-Nonce":wpApiSettings.nonce},data:l}).then((e=>{console.log("Settings saved successfully:",e)})).catch((e=>{console.error("Error saving settings:",e)}))}},d.button.save_settings)))),(0,e.createElement)(s.Panel,{className:"budpay-page__checkout_settings-panel"},(0,e.createElement)(s.PanelBody,{title:d.settings.checkout,initialOpen:!1},(0,e.createElement)("div",{className:"budpday-settings__inputs"},(0,e.createElement)(s.CheckboxControl,{checked:"yes"==l.autocomplete_order,help:"should we complete the order on a confirmed payment?",label:"Autocomplete Order After Payment",onChange:()=>p((e=>({...e,autocomplete_order:"yes"==e.autocomplete_order?"no":"yes"})))}),(0,e.createElement)(_,{labelName:"Payment method Title",initialValue:l.title}),(0,e.createElement)(g,{labelName:"Payment Style on Checkout",initialValue:l.payment_style,options:[{label:"Redirect",value:"redirect"}]})),(0,e.createElement)("div",{className:"budpay-settings-btn-center"},(0,e.createElement)(s.Button,{className:"budpay-settings-cta",variant:"secondary",isBusy:!1,disabled:!1,onClick:()=>{c()({path:h+f,method:"POST",headers:{"Content-Type":"application/json","X-WP-Nonce":wpApiSettings.nonce},data:l}).then((e=>{console.log("Settings saved successfully:",e)})).catch((e=>{console.error("Error saving settings:",e)}))}},d.button.save_settings)))),(0,e.createElement)(s.Panel,{className:"budpay-page__sandbox-mode-panel"},(0,e.createElement)(s.PanelBody,{title:d.sandboxMode.title,initialOpen:!1},(0,e.createElement)("p",null,d.sandboxMode.description),(0,e.createElement)("div",{className:"budpday-settings__inputs"},(0,e.createElement)(_,{labelName:"Test Secret Key",initialValue:l.test_secret_key,onChange:e=>{k("test_secret_key",e)},isConfidential:!0}),(0,e.createElement)(_,{labelName:"Test Public Key",initialValue:l.test_public_key,onChange:e=>{k("test_public_key",e)}})),(0,e.createElement)(v,{className:"budpay-settings-cta",variant:"secondary",isBusy:!1,disabled:!1,isDestructive:"yes"==l.go_live,onClick:()=>{p((e=>({...e,go_live:"yes"==e.go_live?"no":"yes"}))),c()({path:h+f,method:"POST",headers:{"Content-Type":"application/json","X-WP-Nonce":wpApiSettings.nonce},data:{...l,go_live:"yes"==prevSettings.go_live?"no":"yes"}}).then((e=>{console.log("Test mode enabled successfully:",e)})).catch((e=>{console.error("Error saving settings:",e)}))}},"yes"===l.go_live?d.button.enable_test_mode:d.button.disable_test_mode)))))};(0,a.addFilter)("woocommerce_admin_pages_list","budpay",(e=>(e.push({container:E,path:"/budpay",wpOpenMenu:"toplevel_page_woocommerce",breadcrumbs:["Budpay"]}),e))),(0,t.registerPlugin)("my-plugin",{render:()=>(0,e.createElement)(i.WooNavigationItem,{parentMenu:"budpay-root",item:"budpay-1"},(0,e.createElement)("a",{className:"components-button",href:"https://budpay.com/1"},"BudPay"))})})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/index.js":
+/*!****************************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/index.js ***!
+  \****************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ interpolate)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tokenize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tokenize */ "./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/tokenize.js");
+
+
+
+function getCloseIndex(openIndex, tokens) {
+  const openToken = tokens[openIndex];
+  let nestLevel = 0;
+
+  for (let i = openIndex + 1; i < tokens.length; i++) {
+    const token = tokens[i];
+
+    if (token.value === openToken.value) {
+      if (token.type === 'componentOpen') {
+        nestLevel++;
+        continue;
+      }
+
+      if (token.type === 'componentClose') {
+        if (nestLevel === 0) {
+          return i;
+        }
+
+        nestLevel--;
+      }
+    }
+  } // if we get this far, there was no matching close token
+
+
+  throw new Error('Missing closing component token `' + openToken.value + '`');
+}
+
+function buildChildren(tokens, components) {
+  let children = [];
+  let openComponent;
+  let openIndex;
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+
+    if (token.type === 'string') {
+      children.push(token.value);
+      continue;
+    } // component node should at least be set
+
+
+    if (components[token.value] === undefined) {
+      throw new Error(`Invalid interpolation, missing component node: \`${token.value}\``);
+    } // should be either ReactElement or null (both type "object"), all other types deprecated
+
+
+    if (typeof components[token.value] !== 'object') {
+      throw new Error(`Invalid interpolation, component node must be a ReactElement or null: \`${token.value}\``);
+    } // we should never see a componentClose token in this loop
+
+
+    if (token.type === 'componentClose') {
+      throw new Error(`Missing opening component token: \`${token.value}\``);
+    }
+
+    if (token.type === 'componentOpen') {
+      openComponent = components[token.value];
+      openIndex = i;
+      break;
+    } // componentSelfClosing token
+
+
+    children.push(components[token.value]);
+    continue;
+  }
+
+  if (openComponent) {
+    const closeIndex = getCloseIndex(openIndex, tokens);
+    const grandChildTokens = tokens.slice(openIndex + 1, closeIndex);
+    const grandChildren = buildChildren(grandChildTokens, components);
+    const clonedOpenComponent = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.cloneElement)(openComponent, {}, grandChildren);
+    children.push(clonedOpenComponent);
+
+    if (closeIndex < tokens.length - 1) {
+      const siblingTokens = tokens.slice(closeIndex + 1);
+      const siblings = buildChildren(siblingTokens, components);
+      children = children.concat(siblings);
+    }
+  }
+
+  children = children.filter(Boolean);
+
+  if (children.length === 0) {
+    return null;
+  }
+
+  if (children.length === 1) {
+    return children[0];
+  }
+
+  return /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, ...children);
+}
+
+function interpolate(options) {
+  const {
+    mixedString,
+    components,
+    throwErrors
+  } = options;
+
+  if (!components) {
+    return mixedString;
+  }
+
+  if (typeof components !== 'object') {
+    if (throwErrors) {
+      throw new Error(`Interpolation Error: unable to process \`${mixedString}\` because components is not an object`);
+    }
+
+    return mixedString;
+  }
+
+  const tokens = (0,_tokenize__WEBPACK_IMPORTED_MODULE_1__["default"])(mixedString);
+
+  try {
+    return buildChildren(tokens, components);
+  } catch (error) {
+    if (throwErrors) {
+      throw new Error(`Interpolation Error: unable to process \`${mixedString}\` because of error \`${error.message}\``);
+    }
+
+    return mixedString;
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/tokenize.js":
+/*!*******************************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/tokenize.js ***!
+  \*******************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ tokenize)
+/* harmony export */ });
+function identifyToken(item) {
+  // {{/example}}
+  if (item.startsWith('{{/')) {
+    return {
+      type: 'componentClose',
+      value: item.replace(/\W/g, '')
+    };
+  } // {{example /}}
+
+
+  if (item.endsWith('/}}')) {
+    return {
+      type: 'componentSelfClosing',
+      value: item.replace(/\W/g, '')
+    };
+  } // {{example}}
+
+
+  if (item.startsWith('{{')) {
+    return {
+      type: 'componentOpen',
+      value: item.replace(/\W/g, '')
+    };
+  }
+
+  return {
+    type: 'string',
+    value: item
+  };
+}
+
+function tokenize(mixedString) {
+  const tokenStrings = mixedString.split(/(\{\{\/?\s*\w+\s*\/?\}\})/g); // split to components and strings
+
+  return tokenStrings.map(identifyToken);
+}
+
+/***/ }),
+
+/***/ "./assets/admin/components/error-boundary/index.jsx":
+/*!**********************************************************!*\
+  !*** ./assets/admin/components/error-boundary/index.jsx ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+
+/**
+ * WordPress dependencies
+ */
+
+
+// import InlineNotice from 'wcbudpay/admin/components/inline-notice';
+
+class ErrorBoundary extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      error: null
+    };
+  }
+  static getDerivedStateFromError(error) {
+    return {
+      error
+    };
+  }
+  componentDidCatch(error, info) {
+    if (this.props.onError) {
+      this.props.onError(error, info);
+    }
+  }
+  render() {
+    if (!this.state.error) {
+      return this.props.children;
+    }
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('There was an error rendering this view. Please contact support for assistance if the problem persists.', 'budpay'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), this.state.error.toString());
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ErrorBoundary);
+
+/***/ }),
+
+/***/ "./assets/admin/components/input/index.jsx":
+/*!*************************************************!*\
+  !*** ./assets/admin/components/input/index.jsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CustomSelectControl: () => (/* binding */ CustomSelectControl),
+/* harmony export */   InputWithSideLabel: () => (/* binding */ InputWithSideLabel),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+// import { useState } from '@wordpress/element';
+
+const CustomSelectControl = ({
+  labelName,
+  initalValue,
+  options
+}) => {
+  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initalValue);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: labelName || "{{ No Label Added }}",
+    value: value,
+    options: options,
+    onChange: setValue
+  });
+};
+const InputWithSideLabel = ({
+  initialValue,
+  labelName,
+  isConfidential
+}) => {
+  const isHidden = isConfidential || false;
+  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialValue);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalInputControl, {
+    __unstableInputWidth: "3em",
+    label: labelName || '{{label_name}}',
+    value: value,
+    type: isHidden ? 'password' : 'text',
+    labelPosition: "edge",
+    onChange: nextValue => setValue(nextValue !== null && nextValue !== void 0 ? nextValue : '')
+  });
+};
+const Input = ({
+  initialValue,
+  labelName,
+  onChange,
+  isConfidential
+}) => {
+  const isHidden = isConfidential || false;
+  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialValue);
+  const handleValueChange = evt => {
+    onChange(evt);
+    setValue(evt);
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {}, [value]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalInputControl, {
+    label: labelName || '{{label_name}}',
+    value: value,
+    type: isHidden ? 'password' : 'text',
+    onChange: evt => handleValueChange(evt)
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Input);
+
+/***/ }),
+
+/***/ "./assets/admin/components/page/index.jsx":
+/*!************************************************!*\
+  !*** ./assets/admin/components/page/index.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./assets/admin/components/page/style.scss");
+/* harmony import */ var wcbudpay_admin_components_error_boundary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! wcbudpay/admin/components/error-boundary */ "./assets/admin/components/error-boundary/index.jsx");
+
+/**
+ * External dependencies
+ */
+
+
+/**
+ * Internal dependencies
+ */
+
+
+const Page = ({
+  children,
+  maxWidth,
+  isNarrow,
+  className = ''
+}) => {
+  const customStyle = maxWidth ? {
+    maxWidth
+  } : undefined;
+  const classNames = [className, 'budpay-page'];
+  if (isNarrow) {
+    classNames.push('is-narrow');
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: classNames.join(' '),
+    style: customStyle
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_error_boundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, children));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Page);
+
+/***/ }),
+
+/***/ "./assets/admin/settings/strings.jsx":
+/*!*******************************************!*\
+  !*** ./assets/admin/settings/strings.jsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _automattic_interpolate_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @automattic/interpolate-components */ "./node_modules/.pnpm/@automattic+interpolate-components@1.2.1_react@18.2.0/node_modules/@automattic/interpolate-components/dist/esm/index.js");
+
+/* eslint-disable max-len */
+/**
+ * External dependencies
+ */
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  button: {
+    get_started: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Get Started!', 'budpay'),
+    save_settings: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Save Configuration', 'budpay'),
+    enable_test_mode: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Enable Test mode', 'budpay'),
+    disable_test_mode: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Disable Test mode', 'budpay')
+  },
+  heading: firstName => (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)( /* translators: %s: first name of the merchant, if it exists, %s: BudPay. */
+  (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Hi%s,\n Welcome to %s!', 'budpay'), firstName ? ` ${firstName}` : '', 'Budpay'),
+  settings: {
+    general: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('API/Webhook Settings', 'budpay'),
+    checkout: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Checkout Settings', 'budpay')
+  },
+  card: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Offer card payments', 'budpay'),
+  sandboxMode: {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Test Mode: I'm setting up a store for someone else.", 'budpay'),
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)( /* translators: %s: Budpay */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('This option will set up %s in test mode. When you’re ready to launch your store, switching to live payments is easy.', 'budpay'), 'Budpay')
+  },
+  testModeNotice: (0,_automattic_interpolate_components__WEBPACK_IMPORTED_MODULE_3__["default"])({
+    mixedString: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Test mode is enabled, only test credentials can be used to make payments. If you want to process live transactions, please {{learnMoreLink}}disable it{{/learnMoreLink}}.', 'budpay'),
+    components: {
+      learnMoreLink:
+      // Link content is in the format string above. Consider disabling jsx-a11y/anchor-has-content.
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        href: "#",
+        target: "_blank",
+        rel: "noreferrer"
+      })
+    }
+  }),
+  infoNotice: {
+    button: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('enable collection.', 'budpay')
+  },
+  infoModal: {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)( /* translators: %s: Budpay */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Verifying your information with %s', 'budpay'), 'Budpay')
+  },
+  stepsHeading: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('You’re only steps away from getting paid', 'budpay'),
+  step1: {
+    heading: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Create and connect your account', 'budpay'),
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('To ensure safe and secure transactions, a WordPress.com account is required.', 'budpay')
+  },
+  step3: {
+    heading: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Setup complete!', 'budpay'),
+    description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)( /* translators: %s: Budpay */
+    (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('You’re ready to start using the features and benefits of %s.', 'budpay'), 'Budpay')
+  },
+  onboardingDisabled: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We've temporarily paused new account creation. We'll notify you when we resume!", 'budpay'),
+  incentive: {
+    termsAndConditions: url => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('*See <a>Terms and Conditions</a> for details.', 'budpay'), {
+      a:
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+        href: url,
+        target: "_blank",
+        rel: "noopener noreferrer"
+      })
+    })
+  },
+  nonSupportedCountry: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.createInterpolateElement)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.sprintf)( /* translators: %1$s: Budpay */
+  (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('<b>%1$s is not currently available in your location</b>.', 'budpay'), 'Budpay'), {
+    b: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null),
+    a:
+    // eslint-disable-next-line jsx-a11y/anchor-has-content
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: "#",
+      target: "_blank",
+      rel: "noopener noreferrer"
+    })
+  })
+});
+
+/***/ }),
+
+/***/ "./assets/admin/components/page/style.scss":
+/*!*************************************************!*\
+  !*** ./assets/admin/components/page/style.scss ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./assets/admin/settings/index.scss":
+/*!******************************************!*\
+  !*** ./assets/admin/settings/index.scss ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["React"];
+
+/***/ }),
+
+/***/ "@woocommerce/navigation":
+/*!************************************!*\
+  !*** external ["wc","navigation"] ***!
+  \************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wc"]["navigation"];
+
+/***/ }),
+
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/element":
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "@wordpress/hooks":
+/*!*******************************!*\
+  !*** external ["wp","hooks"] ***!
+  \*******************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["hooks"];
+
+/***/ }),
+
+/***/ "@wordpress/i18n":
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["i18n"];
+
+/***/ }),
+
+/***/ "@wordpress/plugins":
+/*!*********************************!*\
+  !*** external ["wp","plugins"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["plugins"];
+
+/***/ }),
+
+/***/ "./node_modules/.pnpm/classnames@2.5.1/node_modules/classnames/index.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/.pnpm/classnames@2.5.1/node_modules/classnames/index.js ***!
+  \******************************************************************************/
+/***/ ((module, exports) => {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = '';
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (arg) {
+				classes = appendClass(classes, parseValue(arg));
+			}
+		}
+
+		return classes;
+	}
+
+	function parseValue (arg) {
+		if (typeof arg === 'string' || typeof arg === 'number') {
+			return arg;
+		}
+
+		if (typeof arg !== 'object') {
+			return '';
+		}
+
+		if (Array.isArray(arg)) {
+			return classNames.apply(null, arg);
+		}
+
+		if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes('[native code]')) {
+			return arg.toString();
+		}
+
+		var classes = '';
+
+		for (var key in arg) {
+			if (hasOwn.call(arg, key) && arg[key]) {
+				classes = appendClass(classes, key);
+			}
+		}
+
+		return classes;
+	}
+
+	function appendClass (value, newClass) {
+		if (!newClass) {
+			return value;
+		}
+	
+		if (value) {
+			return value + ' ' + newClass;
+		}
+	
+		return value + newClass;
+	}
+
+	if ( true && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return classNames;
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+}());
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!****************************************!*\
+  !*** ./assets/admin/settings/index.js ***!
+  \****************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/plugins */ "@wordpress/plugins");
+/* harmony import */ var _wordpress_plugins__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/hooks */ "@wordpress/hooks");
+/* harmony import */ var _wordpress_hooks__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! classnames */ "./node_modules/.pnpm/classnames@2.5.1/node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @woocommerce/navigation */ "@woocommerce/navigation");
+/* harmony import */ var _woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _strings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./strings */ "./assets/admin/settings/strings.jsx");
+/* harmony import */ var wcbudpay_admin_components_page__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! wcbudpay/admin/components/page */ "./assets/admin/components/page/index.jsx");
+/* harmony import */ var wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! wcbudpay/admin/components/input */ "./assets/admin/components/input/index.jsx");
+/* harmony import */ var _index_scss__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./index.scss */ "./assets/admin/settings/index.scss");
+
+
+
+
+
+
+// import { sanitizeHTML } from '@woocommerce/utils';
+// import { RawHTML } from '@wordpress/element';
+// Example of RawHTML and sanitize HTML: https://github.com/Saggre/woocommerce/blob/e38ffc8427ec4cc401d90482939bae4cddb69d7c/plugins/woocommerce-blocks/assets/js/extensions/payment-methods/bacs/index.js#L24
+
+
+
+// import * as Woo from '@woocommerce/components';
+
+
+// import { addQueryArgs } from '@wordpress/url';
+
+/** Internal Dependencies */
+
+
+
+// import { CheckoutIcon, EyeIcon } from 'wcbudpay/admin/icons';
+
+const NAMESPACE = "budpay/v1";
+const ENDPOINT = "/settings";
+
+_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
+  path: NAMESPACE + ENDPOINT
+}).then(configuration => console.log(configuration));
+
+// https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
+
+const EnableTestModeButton = ({
+  onClick,
+  isDestructive,
+  isBusy,
+  children
+}) => {
+  const [isRed, setIsRed] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(isDestructive);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useEffect)(() => {}, [isDestructive]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "budpay-settings-cta",
+    variant: "secondary",
+    isBusy: isBusy,
+    disabled: false,
+    isDestructive: isRed,
+    onClick: () => {
+      onClick();
+      setIsRed(!isRed);
+    }
+  }, children);
+};
+const BudpayNotice = ({
+  style,
+  message
+}) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Snackbar, {
+  style: style
+}, message);
+const AnimatedBudpayNotice = ({
+  style,
+  message
+}) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Animate, {
+  type: "loading",
+  options: {
+    origin: 'top left'
+  }
+}, () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(BudpayNotice, {
+  style: style,
+  message: message
+}));
+const BudpaySettings = () => {
+  /** Initial Values */
+  const default_settings = budpayData?.budpay_defaults;
+  const [openGeneralPanel, setOpenGeneralPanel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  ;
+  const firstName = wcSettings.admin?.currentUserData?.first_name || 'there';
+  const BUDPAY_LOGO_URL = budpayData?.budpay_logo;
+  const [budpaySettings, setBudPaySettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(default_settings);
+  const [enableGetStartedBtn, setEnabledGetstartedBtn] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  const [snackbarOpen, setSnackbarOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  const payment_style_on_checkout_options = [{
+    label: 'Redirect',
+    value: 'redirect'
+  }
+  // { label: 'Popup', value: 'inline' },
+  ];
+  let headingStyle = {};
+  if (firstName != '') {
+    headingStyle['whiteSpaceCollapse'] = 'preserve-breaks';
+  }
+  /** Initial Values End */
+
+  /** Handlers */
+  const handleChange = (key, value) => {
+    setBudPaySettings(prevSettings => ({
+      ...prevSettings,
+      [key]: value
+    }));
+  };
+  const handleSecretKeyChange = evt => {
+    handleChange('live_secret_key', evt);
+  };
+  const handlePublicKeyChange = evt => {
+    handleChange('live_public_key', evt);
+  };
+  const handleTestSecretKeyChange = evt => {
+    handleChange('test_secret_key', evt);
+  };
+  const handleTestPublicKeyChange = evt => {
+    handleChange('test_public_key', evt);
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_page__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    isNarrow: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Card, {
+    className: "budpay-page-banner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bupay-page__heading"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "budpay__settings_logo",
+    alt: "budpay-logo",
+    src: BUDPAY_LOGO_URL,
+    id: "budpay__settings_logo"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "budpay-font-heading",
+    style: {
+      marginLeft: "15px",
+      ...headingStyle
+    }
+  }, _strings__WEBPACK_IMPORTED_MODULE_9__["default"].heading(firstName))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpay-page__buttons"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    variant: "primary",
+    isBusy: false,
+    disabled: enableGetStartedBtn,
+    onClick: () => {
+      setOpenGeneralPanel(true);
+      setEnabledGetstartedBtn(false);
+    }
+  }, _strings__WEBPACK_IMPORTED_MODULE_9__["default"].button.get_started))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
+    className: "budpday-page__general_settings-panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
+    title: _strings__WEBPACK_IMPORTED_MODULE_9__["default"].settings.general,
+    initialOpen: openGeneralPanel
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpday-settings__general"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.ToggleControl, {
+    checked: budpaySettings.enabled == 'yes',
+    label: "Enable Budpay",
+    onChange: () => setBudPaySettings(prevSettings => ({
+      ...prevSettings,
+      enabled: prevSettings.enabled == 'yes' ? 'no' : 'yes' // Toggle the value
+    }))
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpday-settings__inputs"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    labelName: "Secret Key",
+    initialValue: budpaySettings.live_secret_key,
+    onChange: handleSecretKeyChange,
+    isConfidential: true
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    labelName: "Public Key",
+    initialValue: budpaySettings.live_public_key,
+    onChange: handlePublicKeyChange
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalText, {
+    className: "budpay-webhook-link",
+    numberOfLines: 1
+  }, budpayData.budpay_webhook), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.__experimentalText, {
+    className: "budpay-webhook-instructions",
+    numberOfLines: 1
+  }, "Please add this webhook URL and paste on the webhook section on your dashboard.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpay-settings-btn-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "budpay-settings-cta",
+    variant: "secondary",
+    isBusy: false,
+    disabled: false,
+    onClick: () => {
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
+        path: NAMESPACE + ENDPOINT,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': wpApiSettings.nonce
+        },
+        data: budpaySettings // Send the updated settings to the server
+      }).then(response => {
+        console.log('Settings saved successfully:', response);
+        // Optionally, you can update the UI or show a success message here
+      }).catch(error => {
+        console.error('Error saving settings:', error);
+        // Handle errors if any
+      });
+    }
+  }, _strings__WEBPACK_IMPORTED_MODULE_9__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
+    className: "budpay-page__checkout_settings-panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
+    title: _strings__WEBPACK_IMPORTED_MODULE_9__["default"].settings.checkout
+    // icon={ CheckoutIcon }
+    ,
+    initialOpen: false
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpday-settings__inputs"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.CheckboxControl, {
+    checked: budpaySettings.autocomplete_order == 'yes',
+    help: "should we complete the order on a confirmed payment?",
+    label: "Autocomplete Order After Payment",
+    onChange: () => setBudPaySettings(prevSettings => ({
+      ...prevSettings,
+      autocomplete_order: prevSettings.autocomplete_order == 'yes' ? 'no' : 'yes' // Toggle the value
+    }))
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    labelName: "Payment method Title",
+    initialValue: budpaySettings.title
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__.CustomSelectControl, {
+    labelName: "Payment Style on Checkout",
+    initialValue: budpaySettings.payment_style,
+    options: payment_style_on_checkout_options
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpay-settings-btn-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "budpay-settings-cta",
+    variant: "secondary",
+    isBusy: false,
+    disabled: false,
+    onClick: () => {
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
+        path: NAMESPACE + ENDPOINT,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': wpApiSettings.nonce
+        },
+        data: budpaySettings // Send the updated settings to the server
+      }).then(response => {
+        console.log('Settings saved successfully:', response);
+        // Optionally, you can update the UI or show a success message here
+      }).catch(error => {
+        console.error('Error saving settings:', error);
+        // Handle errors if any
+      });
+    }
+  }, _strings__WEBPACK_IMPORTED_MODULE_9__["default"].button.save_settings)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Panel, {
+    className: "budpay-page__sandbox-mode-panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.PanelBody, {
+    title: _strings__WEBPACK_IMPORTED_MODULE_9__["default"].sandboxMode.title,
+    initialOpen: false
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, _strings__WEBPACK_IMPORTED_MODULE_9__["default"].sandboxMode.description), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "budpday-settings__inputs"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    labelName: "Test Secret Key",
+    initialValue: budpaySettings.test_secret_key,
+    onChange: handleTestSecretKeyChange,
+    isConfidential: true
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    labelName: "Test Public Key",
+    initialValue: budpaySettings.test_public_key,
+    onChange: handleTestPublicKeyChange
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(EnableTestModeButton, {
+    className: "budpay-settings-cta",
+    variant: "secondary",
+    isBusy: false,
+    disabled: false,
+    isDestructive: budpaySettings.go_live == 'no',
+    onClick: () => {
+      setBudPaySettings(prevSettings => ({
+        ...prevSettings,
+        go_live: prevSettings.go_live == 'yes' ? 'no' : 'yes' // Toggle the value
+      }));
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
+        path: NAMESPACE + ENDPOINT,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': wpApiSettings.nonce
+        },
+        data: {
+          ...budpaySettings,
+          go_live: budpaySettings.go_live == 'yes' ? 'no' : 'yes'
+        } // Send the updated settings to the server
+      }).then(response => {
+        console.log('Test mode enabled successfully:', response);
+        // Optionally, you can update the UI or show a success message here
+      }).catch(error => {
+        console.error('Error saving settings:', error);
+        // Handle errors if any
+      });
+    }
+  }, budpaySettings.go_live === 'yes' ? _strings__WEBPACK_IMPORTED_MODULE_9__["default"].button.enable_test_mode : _strings__WEBPACK_IMPORTED_MODULE_9__["default"].button.disable_test_mode)))));
+};
+(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_2__.addFilter)("woocommerce_admin_pages_list", "budpay", pages => {
+  pages.push({
+    container: BudpaySettings,
+    path: "/budpay",
+    wpOpenMenu: "toplevel_page_woocommerce",
+    breadcrumbs: ["Budpay"]
+  });
+  return pages;
+});
+const BudPayNav = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_woocommerce_navigation__WEBPACK_IMPORTED_MODULE_7__.WooNavigationItem, {
+    parentMenu: "budpay-root",
+    item: "budpay-1"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "components-button",
+    href: "https://budpay.com/1"
+  }, "BudPay"));
+};
+(0,_wordpress_plugins__WEBPACK_IMPORTED_MODULE_1__.registerPlugin)("my-plugin", {
+  render: BudPayNav
+});
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=settings.js.map

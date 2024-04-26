@@ -172,7 +172,7 @@ const BudpaySettings = () => {
 							</div>
 
 							<Text className="budpay-webhook-link" numberOfLines={1} >
-								https://8000-bajoski34-budpay-dc8esoaz6is.ws-eu110.gitpod.io/?wc-api=Budpay_Payment_Webhook
+								{ budpayData.budpay_webhook }
 							</Text>
 
 							<Text className="budpay-webhook-instructions" numberOfLines={1} >
@@ -286,7 +286,7 @@ const BudpaySettings = () => {
 							variant="secondary"
 							isBusy={ false }
 							disabled={ false }
-							isDestructive={ budpaySettings.go_live == 'yes' }
+							isDestructive={ budpaySettings.go_live == 'no' }
 							onClick={ () => {
 								setBudPaySettings( prevSettings => ({
 									...prevSettings,
@@ -300,7 +300,7 @@ const BudpaySettings = () => {
 										'Content-Type': 'application/json',
 										'X-WP-Nonce': wpApiSettings.nonce,
 									},
-									data: { ...budpaySettings, go_live: (prevSettings.go_live == 'yes') ? 'no' : 'yes'  } // Send the updated settings to the server
+									data: { ...budpaySettings, go_live: (budpaySettings.go_live == 'yes') ? 'no' : 'yes'  } // Send the updated settings to the server
 								}).then(response => {
 									console.log('Test mode enabled successfully:', response);
 									// Optionally, you can update the UI or show a success message here

@@ -109,6 +109,10 @@ function budpay_add_extension_register_script() {
 		'autocomplete_order' => 'no',
 	);
 
+	if ( empty( get_option( 'woocommerce_budpay_settings', array() ) ) ) {
+		add_option( 'woocommerce_budpay_settings', $budpay_fallback_settings );
+	}
+
 	$budpay_default_settings = get_option( 'woocommerce_budpay_settings', $budpay_fallback_settings );
 
 	wp_localize_script(
@@ -119,6 +123,7 @@ function budpay_add_extension_register_script() {
 			'asset_plugin_dir' => plugins_url( '', BUDPAY_PLUGIN_DIR ),
 			'budpay_logo'      => plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ),
 			'budpay_defaults'  => $budpay_default_settings,
+			'budpay_webhook'   => WC()->api_request_url( 'Budpay_Payment_Webhook' ),
 		)
 	);
 

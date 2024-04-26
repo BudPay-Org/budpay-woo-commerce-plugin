@@ -50,28 +50,61 @@ final class Budpay_Settings_Rest_Controller extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_item' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-					'args'                => array(
-						'live_secret_key' => true,
-						'test_secret_key' => true,
-						'live_public_key' => true,
-						'test_public_key' => true,
-						'go_live'         => array(
-							'validate_callback' => function ( $param ) {
-								if ( ! gettype( $param ) === 'yes' && ! gettype( $param ) === 'no' ) {
-									return new WP_Error(
-										'rest_invalid_param',
-										__( 'The go_live value provided is invalid. Please provide a yes or no.', 'budpay' ),
-										array( 'status' => WP_Http::BAD_REQUEST )
-									);
-								}
-								return true;
-							},
-						),
-					),
+					'args'                => $this->budpay_update_validations(),
 
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
+		);
+	}
+
+	/**
+	 * Update validations.
+	 */
+	public function budpay_update_validations() {
+		return array(
+			array(
+				'live_secret_key'    => true,
+				'test_secret_key'    => true,
+				'live_public_key'    => true,
+				'test_public_key'    => true,
+				'go_live'            => array(
+					'validate_callback' => function ( $param ) {
+						if ( ! gettype( $param ) === 'yes' && ! gettype( $param ) === 'no' ) {
+							return new WP_Error(
+								'rest_invalid_param',
+								__( 'The go_live value provided is invalid. Please provide a yes or no.', 'budpay' ),
+								array( 'status' => WP_Http::BAD_REQUEST )
+							);
+						}
+						return true;
+					},
+				),
+				'autocomplete_order' => array(
+					'validate_callback' => function ( $param ) {
+						if ( ! gettype( $param ) === 'yes' && ! gettype( $param ) === 'no' ) {
+							return new WP_Error(
+								'rest_invalid_param',
+								__( 'The autocomplete_order value provided is invalid. Please provide a yes or no.', 'budpay' ),
+								array( 'status' => WP_Http::BAD_REQUEST )
+							);
+						}
+						return true;
+					},
+				),
+				'enabled'            => array(
+					'validate_callback' => function ( $param ) {
+						if ( ! gettype( $param ) === 'yes' && ! gettype( $param ) === 'no' ) {
+							return new WP_Error(
+								'rest_invalid_param',
+								__( 'The enabled value provided is invalid. Please provide a yes or no.', 'budpay' ),
+								array( 'status' => WP_Http::BAD_REQUEST )
+							);
+						}
+						return true;
+					},
+				),
+			),
 		);
 	}
 
