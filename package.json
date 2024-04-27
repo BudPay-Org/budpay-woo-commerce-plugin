@@ -90,6 +90,7 @@
   },
   "dependencies": {
     "@automattic/interpolate-components": "^1.2.1",
+    "@mantine/core": "^7.8.1",
     "@wordpress/icons": "^9.47.0",
     "crypto-js": "^4.2.0"
   }

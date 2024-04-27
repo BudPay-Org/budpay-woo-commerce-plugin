@@ -8,16 +8,10 @@ import { useEffect, useState } from '@wordpress/element';
 // Example of RawHTML and sanitize HTML: https://github.com/Saggre/woocommerce/blob/e38ffc8427ec4cc401d90482939bae4cddb69d7c/plugins/woocommerce-blocks/assets/js/extensions/payment-methods/bacs/index.js#L24
 
 import { 
-	Animate,
-	Dropdown,
 	Button,
-	Notice,
 	Panel,
 	PanelBody,
 	Card,
-	CardHeader,
-	CardBody,
-	CardFooter,
 	Snackbar,
 	CheckboxControl,
 	ToggleControl,
@@ -25,7 +19,7 @@ import {
 	__experimentalHeading as Heading,
 	__experimentalInputControl as InputControl,
 	ResponsiveWrapper
- } from '@wordpress/components';
+} from '@wordpress/components';
 import { WooNavigationItem } from "@woocommerce/navigation";
 // import * as Woo from '@woocommerce/components';
 import { Fragment } from '@wordpress/element';
@@ -47,6 +41,25 @@ apiFetch({ path: NAMESPACE + ENDPOINT }).then((configuration) => console.log(con
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
+const BudpaySaveButton = ( { children, onClick } ) => {
+	const [isBusy, setIsBusy] = useState(false);
+	useEffect(() => {}, [isBusy]);
+	return (
+		<Button
+			className="budpay-settings-cta"
+			variant="secondary"
+			isBusy={ isBusy }
+			disabled={ false }
+			onClick={ () => { 
+				setIsBusy(true); 
+				onClick(setIsBusy);
+			} }
+		>
+			{ children }
+		</Button>
+	)
+}
+
 const EnableTestModeButton = ({ onClick, isDestructive, isBusy, children}) => {
 	const [ isRed, setIsRed ] = useState(isDestructive);
 	useEffect(() => {}, [isDestructive]);
@@ -67,18 +80,6 @@ const EnableTestModeButton = ({ onClick, isDestructive, isBusy, children}) => {
 	)
 }
 
-const BudpayNotice = ({ style, message }) => (
-	<Snackbar style={style}>{ message }</Snackbar>
-);
-
-const AnimatedBudpayNotice = ({ style, message }) => (
-    <Animate type="loading" options={ { origin: 'top left' } }>
-        { () => (
-            <BudpayNotice style={style} message={ message }  />
-        ) }
-    </Animate>
-);
-
 const BudpaySettings = () => {
 	/** Initial Values */
 	const default_settings = budpayData?.budpay_defaults;
@@ -87,7 +88,6 @@ const BudpaySettings = () => {
 	const BUDPAY_LOGO_URL = budpayData?.budpay_logo;
 	const [budpaySettings, setBudPaySettings] = useState(default_settings);
 	const [enableGetStartedBtn, setEnabledGetstartedBtn] = useState(false);
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const payment_style_on_checkout_options = [
         { label: 'Redirect', value: 'redirect' },
         // { label: 'Popup', value: 'inline' },
@@ -111,6 +111,10 @@ const BudpaySettings = () => {
 	const handleSecretKeyChange = (evt) => {
 		handleChange('live_secret_key', evt);
 	};
+
+	const handlePaymentTitle = (evt) => {
+		handleChange('title', evt);
+	}
 	
 	const handlePublicKeyChange = (evt) => {
 		handleChange('live_public_key', evt);
@@ -181,12 +185,7 @@ const BudpaySettings = () => {
 						</div>
 
 						<div className="budpay-settings-btn-center">
-							<Button
-								className="budpay-settings-cta"
-								variant="secondary"
-								isBusy={ false }
-								disabled={ false }
-								onClick={ () => {
+							<BudpaySaveButton onClick={ (setIsBusy) => {
 									apiFetch({
 										path: NAMESPACE + ENDPOINT,
 										method: 'POST',
@@ -198,15 +197,15 @@ const BudpaySettings = () => {
 									}).then(response => {
 										console.log('Settings saved successfully:', response);
 										// Optionally, you can update the UI or show a success message here
+										setIsBusy(false);
 
 									}).catch(error => {
 										console.error('Error saving settings:', error);
 										// Handle errors if any
 									});
-								} }
-							>
-								{ strings.button.save_settings }
-							</Button>
+								} }>
+								{ strings.button.save_settings }	
+							</BudpaySaveButton>
 						</div>
 					</PanelBody>
 				</Panel>
@@ -237,17 +236,12 @@ const BudpaySettings = () => {
 									autocomplete_order: prevSettings.autocomplete_order == 'yes' ? 'no' : 'yes' // Toggle the value
 								}) ) }
 							/>
-							<Input labelName="Payment method Title" initialValue={ budpaySettings.title } />
+							<Input labelName="Payment method Title" initialValue={ budpaySettings.title } onChange={ handlePaymentTitle } />
 							<CustomSelectControl labelName="Payment Style on Checkout" initialValue={ budpaySettings.payment_style } options={ payment_style_on_checkout_options } />
 						</div>
 
 						<div className="budpay-settings-btn-center">
-							<Button
-								className="budpay-settings-cta"
-								variant="secondary"
-								isBusy={ false }
-								disabled={ false }
-								onClick={ () => {
+							<BudpaySaveButton onClick={ (setIsBusy) => {
 									apiFetch({
 										path: NAMESPACE + ENDPOINT,
 										method: 'POST',
@@ -259,14 +253,15 @@ const BudpaySettings = () => {
 									}).then(response => {
 										console.log('Settings saved successfully:', response);
 										// Optionally, you can update the UI or show a success message here
+										setIsBusy(false);
+
 									}).catch(error => {
 										console.error('Error saving settings:', error);
 										// Handle errors if any
 									});
-								} }
-							>
-								{ strings.button.save_settings }
-							</Button>
+								} }>
+								{ strings.button.save_settings }	
+							</BudpaySaveButton>
 						</div>
 					</PanelBody>
 				</Panel>
@@ -315,16 +310,6 @@ const BudpaySettings = () => {
 					</PanelBody>
 				</Panel>
 			</Page>
-
-			{/* <BudpayNotice message={ 'Settings saved successfully:' }  /> */}
-			{/* <AnimatedBudpayNotice  style={{
-				width: "30%",
-				zIndex: "9999",
-				position: "fixed",
-				right: "0",
-				top: "4em",
-				marginRight: "2em",
-			}} message={ 'Settings saved successfully:' }  /> */}
 		</Fragment>
 	);
 } 

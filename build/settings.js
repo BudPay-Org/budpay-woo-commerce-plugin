@@ -804,6 +804,23 @@ _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
 
 // https://woocommerce.github.io/woocommerce-blocks/?path=/docs/icons-icon-library--docs
 
+const BudpaySaveButton = ({
+  children,
+  onClick
+}) => {
+  const [isBusy, setIsBusy] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useEffect)(() => {}, [isBusy]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+    className: "budpay-settings-cta",
+    variant: "secondary",
+    isBusy: isBusy,
+    disabled: false,
+    onClick: () => {
+      setIsBusy(true);
+      onClick(setIsBusy);
+    }
+  }, children);
+};
 const EnableTestModeButton = ({
   onClick,
   isDestructive,
@@ -824,24 +841,6 @@ const EnableTestModeButton = ({
     }
   }, children);
 };
-const BudpayNotice = ({
-  style,
-  message
-}) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Snackbar, {
-  style: style
-}, message);
-const AnimatedBudpayNotice = ({
-  style,
-  message
-}) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Animate, {
-  type: "loading",
-  options: {
-    origin: 'top left'
-  }
-}, () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(BudpayNotice, {
-  style: style,
-  message: message
-}));
 const BudpaySettings = () => {
   /** Initial Values */
   const default_settings = budpayData?.budpay_defaults;
@@ -851,7 +850,6 @@ const BudpaySettings = () => {
   const BUDPAY_LOGO_URL = budpayData?.budpay_logo;
   const [budpaySettings, setBudPaySettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(default_settings);
   const [enableGetStartedBtn, setEnabledGetstartedBtn] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
-  const [snackbarOpen, setSnackbarOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_5__.useState)(false);
   const payment_style_on_checkout_options = [{
     label: 'Redirect',
     value: 'redirect'
@@ -873,6 +871,9 @@ const BudpaySettings = () => {
   };
   const handleSecretKeyChange = evt => {
     handleChange('live_secret_key', evt);
+  };
+  const handlePaymentTitle = evt => {
+    handleChange('title', evt);
   };
   const handlePublicKeyChange = evt => {
     handleChange('live_public_key', evt);
@@ -943,12 +944,8 @@ const BudpaySettings = () => {
     numberOfLines: 1
   }, "Please add this webhook URL and paste on the webhook section on your dashboard.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpay-settings-btn-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-    className: "budpay-settings-cta",
-    variant: "secondary",
-    isBusy: false,
-    disabled: false,
-    onClick: () => {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(BudpaySaveButton, {
+    onClick: setIsBusy => {
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
         path: NAMESPACE + ENDPOINT,
         method: 'POST',
@@ -960,6 +957,7 @@ const BudpaySettings = () => {
       }).then(response => {
         console.log('Settings saved successfully:', response);
         // Optionally, you can update the UI or show a success message here
+        setIsBusy(false);
       }).catch(error => {
         console.error('Error saving settings:', error);
         // Handle errors if any
@@ -984,19 +982,16 @@ const BudpaySettings = () => {
     }))
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__["default"], {
     labelName: "Payment method Title",
-    initialValue: budpaySettings.title
+    initialValue: budpaySettings.title,
+    onChange: handlePaymentTitle
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(wcbudpay_admin_components_input__WEBPACK_IMPORTED_MODULE_11__.CustomSelectControl, {
     labelName: "Payment Style on Checkout",
     initialValue: budpaySettings.payment_style,
     options: payment_style_on_checkout_options
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "budpay-settings-btn-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
-    className: "budpay-settings-cta",
-    variant: "secondary",
-    isBusy: false,
-    disabled: false,
-    onClick: () => {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(BudpaySaveButton, {
+    onClick: setIsBusy => {
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_8___default()({
         path: NAMESPACE + ENDPOINT,
         method: 'POST',
@@ -1008,6 +1003,7 @@ const BudpaySettings = () => {
       }).then(response => {
         console.log('Settings saved successfully:', response);
         // Optionally, you can update the UI or show a success message here
+        setIsBusy(false);
       }).catch(error => {
         console.error('Error saving settings:', error);
         // Handle errors if any
