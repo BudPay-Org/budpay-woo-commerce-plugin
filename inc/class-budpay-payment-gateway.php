@@ -509,20 +509,20 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$logger     = $this->logger;
 
 		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) ) ) {
-			if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && isset( $_GET['order_id'] ) ) {
-				// Cancel the payment.
+			if ( isset( $_GET['order_id'] ) ) {
+				// Handle expired Session.
 				$order_id = urldecode( sanitize_text_field( wp_unslash( $_GET['order_id'] ) ) ) ?? sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
 				$order_id = intval( $order_id );
 				$order    = wc_get_order( $order_id );
 
 				if ( $order instanceof WC_Order ) {
-					$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
-					$order->update_status( 'cancelled' );
-					$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
-					$admin_note .= esc_html__( 'Please, confirm from the order notes that there is no note of a successful transaction. If there is, this means that the user was debited and you either have to give value for the transaction or refund the customer.', 'budpay' );
+					WC()->session->set( 'refresh_totals', true );
+					wc_add_notice( __( 'We were unable to process your order, please try again.', 'budpay' ) );
+					$admin_note  = esc_html__( 'Attention: Customer session expired. ', 'budpay' ) . '<br>';
+					$admin_note .= esc_html__( 'Customer should try again. order has status is now pending payment.', 'budpay' );
 					$order->add_order_note( $admin_note );
+					wp_safe_redirect( $order->get_cancel_order_url() );
 				}
-				header( 'Location: ' . wc_get_cart_url() );
 				die();
 			}
 		}
@@ -554,7 +554,20 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					// Request successful.
-					$success = true;
+					$current_response = \json_decode( $response['body'] );
+					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && 'pending' === $current_response->data->status ) {
+						if ( $order instanceof WC_Order ) {
+							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
+							$order->update_status( 'cancelled' );
+							$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
+							$admin_note .= esc_html__( 'Please, confirm from the order notes that there is no note of a successful transaction. If there is, this means that the user was debited and you either have to give value for the transaction or refund the customer.', 'budpay' );
+							$order->add_order_note( $admin_note );
+						}
+						header( 'Location: ' . wc_get_cart_url() );
+						die();
+					} else {
+						$success = true;
+					}
 				} else {
 					// Retry.
 					++$attempt;
