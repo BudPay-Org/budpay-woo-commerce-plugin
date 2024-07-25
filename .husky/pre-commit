@@ -1,9 +1,9 @@
 #!/bin/sh
 
-echo "Runnning PHPCS checker..."
-./vendor/bin/phpcs inc/ budpay.php
 echo "Fixing PHP format all errors"
 ./vendor/bin/phpcbf inc/ budpay.php
+echo "Runnning PHPCS checker..."
+./vendor/bin/phpcs inc/ budpay.php
 echo "adding all changes"
 git add .
 echo $HOME
