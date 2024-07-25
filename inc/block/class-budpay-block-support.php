@@ -140,7 +140,7 @@ final class Budpay_Block_Support extends AbstractPaymentMethodType {
 			'public_key'  => ( 'yes' === $this->settings['go_live'] ) ? $this->settings['live_public_key'] : $this->settings['test_public_key'],
 			'asset_url'   => plugins_url( 'assets', BUDPAY_PLUGIN_FILE ),
 			'title'       => $this->settings['title'],
-			'description' => $this->settings['description'],
+			'description' => $this->settings['description'] ?? '',
 		);
 	}
 
