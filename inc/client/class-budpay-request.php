@@ -55,24 +55,24 @@ class Budpay_Request {
 			throw new \InvalidArgumentException( 'This Payment Method is current unavailable as Administrator is yet to Configure it.Please contact Administrator for more information.' );
 		}
 
-		// Parse the base URL to check for existing query parameters
-		$url_parts = parse_url($this->notify_url);
+		// Parse the base URL to check for existing query parameters.
+		$url_parts = wp_parse_url( $this->notify_url );
 
-		// If the base URL already has query parameters, merge them with new ones
-		if (isset($url_parts['query'])) {
-			// Convert the query string to an array
-			parse_str($url_parts['query'], $query_array);
+		// If the base URL already has query parameters, merge them with new ones.
+		if ( isset( $url_parts['query'] ) ) {
+			// Convert the query string to an array.
+			parse_str( $url_parts['query'], $query_array );
 
-			// Add the new parameters to the existing query array
+			// Add the new parameters to the existing query array.
 			$query_array['order_id'] = $order_id;
 
-			// Rebuild the query string with the new parameters
-			$new_query_string = http_build_query($query_array);
+			// Rebuild the query string with the new parameters.
+			$new_query_string = http_build_query( $query_array );
 
-			// Rebuild the final URL with the new query string
+			// Rebuild the final URL with the new query string.
 			$callback_url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $new_query_string;
 		} else {
-			// If no existing query parameters, simply append the new ones
+			// If no existing query parameters, simply append the new ones.
 			$callback_url = add_query_arg(
 				array(
 					'order_id' => $order_id,
@@ -87,7 +87,7 @@ class Budpay_Request {
 			'amount'    => $amount,
 			'currency'  => $currency,
 			'reference' => $txnref,
-			'callback'  => $callback_url
+			'callback'  => $callback_url,
 		);
 	}
 }

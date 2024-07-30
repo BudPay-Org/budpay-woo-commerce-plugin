@@ -554,9 +554,9 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					// Request successful.
-					$current_response = \json_decode( $response['body'] );
-					$is_cancelled_or_pending_on_budpay = in_array( $current_response->data->status, [ 'cancelled', 'pending' ] );
-					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && $is_cancelled_or_pending_on_budpay  ) {
+					$current_response                  = \json_decode( $response['body'] );
+					$is_cancelled_or_pending_on_budpay = in_array( $current_response->data->status, array( 'cancelled', 'pending' ), true );
+					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && $is_cancelled_or_pending_on_budpay ) {
 						if ( $order instanceof WC_Order ) {
 							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
 							$order->update_status( 'cancelled' );
