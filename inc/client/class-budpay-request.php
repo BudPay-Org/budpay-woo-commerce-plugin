@@ -76,7 +76,6 @@ class Budpay_Request {
 			$callback_url = add_query_arg(
 				array(
 					'order_id' => $order_id,
-					'_wpnonce' => $custom_nonce,
 				),
 				$this->notify_url
 			);
