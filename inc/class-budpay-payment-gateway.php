@@ -156,7 +156,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 		?>
-		<img class="budpay__heading" src="https://merchant.budpay.com/assets/front/img/BudPay-Logo3.png" alt="budpay" width="250px" />
+		<img class="budpay__heading" src="<?php echo esc_url( plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ) ); ?>" alt="budpay" width="250px" />
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">
