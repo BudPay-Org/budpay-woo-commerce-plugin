@@ -52,6 +52,7 @@
     "assets",
     "i18n",
     "build",
+    "languages",
     "inc",
     "budpay.php",
     "README.md",
