@@ -600,7 +600,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				$response = json_decode( $response['body'] );
 				$this->logger->info( wp_json_encode( $response ) );
 				if ( (bool) $response->data->status ) {
-					$amount = (float) $response->data->amount;
+					$amount = (float) $response->data->requested_amount;
 					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
 						$order->update_status( 'on-hold' );
 						$customer_note  = 'Thank you for your order.<br>';
@@ -764,7 +764,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				$response = json_decode( $response['body'] );
 				$this->logger->info( wp_json_encode( $response ) );
 				if ( (bool) $response->data->status ) {
-					$amount = (float) $response->data->amount;
+					$amount = (float) $response->data->requested_amount;
 					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
 						$order->update_status( 'on-hold' );
 						$admin_note  = esc_html__( 'Attention: New order has been placed on hold because of incorrect payment amount or currency. Please, look into it.', 'budpay' ) . '<br>';
