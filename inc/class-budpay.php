@@ -173,13 +173,11 @@ class BudPay {
 	public static function budpay_favicon() {
 		# using admin_print_styles.
 		$image_url = plugin_dir_url( BUDPAY_PLUGIN_FILE ) . 'assets/img/budpay-30x30.png';
-		$budpay_dash_icon = '.dashicons-budpay {
+		echo '<style> .dashicons-budpay {
 				background-image: url("' . esc_url( $image_url ) . '");
 				background-repeat: no-repeat;
 				background-position: center; 
-		}';
-
-		echo '<style>'. esc_html( $budpay_dash_icon ) .'</style>';
+		}</style>';
 	}
 
 	/**
