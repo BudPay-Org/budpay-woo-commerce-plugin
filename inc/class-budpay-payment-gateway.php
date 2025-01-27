@@ -645,13 +645,16 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$logger     = $this->logger;
 		$sdk        = $this->sdk;
 
+		$merchantSecretHash = hash_hmac("SHA512", $public_key,$secret_key);
+
+
 		$event = file_get_contents( 'php://input' );
 
 		http_response_code( 200 );
 		$event = json_decode( $event );
 
 		if ( empty( $event->notify ) && empty( $event->data ) ) {
-			$this->logger->info( 'Webhook: ' . wp_json_encode( $event->data ) );
+			$this->logger->info( 'Webhook: ' . wp_json_encode( $event ) );
 			wp_send_json(
 				array(
 					'status'  => 'error',
@@ -672,9 +675,9 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( 'transaction' === $event->notify ) {
-			sleep( 6 );
+			sleep( 4 );
 
-			$event_type = $event['notifyType'];
+			$event_type = $event->notifyType;
 			$event_data = $event->data;
 
 			// check if transaction reference starts with WOO on hpos enabled.
