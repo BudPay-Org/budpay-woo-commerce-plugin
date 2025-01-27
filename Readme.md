@@ -4,6 +4,9 @@
 1. Node v20+ 
 2. pnpm
 3. WPCLI
+4. Webpack
+
+The build tool being used is webpack.
 
 ### Steps to building the Plugin zip.
 1. ./bin/setup.sh
