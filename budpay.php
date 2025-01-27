@@ -109,11 +109,11 @@ function budpay_add_extension_register_script() {
 		'autocomplete_order' => 'no',
 	);
 
-	if ( empty( get_option( 'woocommerce_budpay_settings', array() ) ) ) {
-		add_option( 'woocommerce_budpay_settings', $budpay_fallback_settings );
+	if ( empty( get_option( 'budpay_woocommerce_settings', array() ) ) ) {
+		add_option( 'budpay_woocommerce_settings', $budpay_fallback_settings );
 	}
 
-	$budpay_default_settings = get_option( 'woocommerce_budpay_settings', $budpay_fallback_settings );
+	$budpay_default_settings = get_option( 'budpay_woocommerce_settings', $budpay_fallback_settings );
 
 	wp_localize_script(
 		'budpay-admin-js',

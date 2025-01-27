@@ -156,7 +156,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 		?>
-		<img class="budpay__heading" src="<?php echo esc_url( plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ) ); ?>" alt="budpay" width="250px" />
+		
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">
@@ -599,7 +599,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				$response = json_decode( $response['body'] );
 				$this->logger->info( wp_json_encode( $response ) );
 				if ( (bool) $response->data->status ) {
-					$amount = (float) $response->data->amount;
+					$amount = (float) $response->data->requested_amount;
 					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
 						$order->update_status( 'on-hold' );
 						$customer_note  = 'Thank you for your order.<br>';
@@ -644,13 +644,16 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$logger     = $this->logger;
 		$sdk        = $this->sdk;
 
+		$merchantSecretHash = hash_hmac("SHA512", $public_key,$secret_key);
+
+
 		$event = file_get_contents( 'php://input' );
 
 		http_response_code( 200 );
 		$event = json_decode( $event );
 
 		if ( empty( $event->notify ) && empty( $event->data ) ) {
-			$this->logger->info( 'Webhook: ' . wp_json_encode( $event->data ) );
+			$this->logger->info( 'Webhook: ' . wp_json_encode( $event ) );
 			wp_send_json(
 				array(
 					'status'  => 'error',
@@ -671,9 +674,9 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( 'transaction' === $event->notify ) {
-			sleep( 6 );
+			sleep( 4 );
 
-			$event_type = $event['notifyType'];
+			$event_type = $event->notifyType;
 			$event_data = $event->data;
 
 			// check if transaction reference starts with WOO on hpos enabled.
@@ -763,7 +766,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				$response = json_decode( $response['body'] );
 				$this->logger->info( wp_json_encode( $response ) );
 				if ( (bool) $response->data->status ) {
-					$amount = (float) $response->data->amount;
+					$amount = (float) $response->data->requested_amount;
 					if ( $response->data->currency !== $order->get_currency() || ! $this->amounts_equal( $amount, $order->get_total() ) ) {
 						$order->update_status( 'on-hold' );
 						$admin_note  = esc_html__( 'Attention: New order has been placed on hold because of incorrect payment amount or currency. Please, look into it.', 'budpay' ) . '<br>';

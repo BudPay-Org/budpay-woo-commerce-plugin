@@ -17,7 +17,6 @@ services:
       - db
     image: wordpress:latest
     volumes:
-      - ../src:/var/www/html
       - ".:/var/www/html/wp-content/plugins/budpay"
     ports:
       - "8000:80"

@@ -1,5 +1,5 @@
 === BudPay ===
-Contributors: Buday Dev
+Contributors: azeezoluwafemi
 Tags: payments, mastercard, visa
 Requires at least: 6.0
 Tested up to: 6.7
@@ -14,7 +14,7 @@ Accept both international and local payments on from your store.
 collect both international an local payments on your store via budpay. 
 
 = Plugin Features =
-* Collections: Card.
+* Collections: Card, Bank Transfer
 
 
 = Requirements =
@@ -55,8 +55,29 @@ Alternatively you can see the budpay button on the sidebar. click it.
 *   Added: Support for HPOS.
 *   Added: compatibility with WooCommerce 7.1 to 6.9.1
 
+== External Services ==
+
+This plugin integrates with external services to process payments and provide a seamless checkout experience. Below is a detailed explanation of the services used:
+
+1. **Budpay Inline Payment Integration**
+   - **What it is used for**: This service facilitates payment processing through the Budpay Inline Payment system.
+   - **Data Sent**: The plugin sends transaction details, such as the amount, currency, and user-specific identifiers, to Budpay's API endpoints.
+     - **API Endpoint**: `https://api.budpay.com/api/v2/`
+     - **Inline Payment Script**: `https://inlinepay.budpay.com/budpay-inline-custom.js`
+   - **When data is sent**: 
+     - Data is sent to Budpay's API when a user initiates a payment.
+     - The inline script is loaded on the checkout page for payment functionality.
+   - **Links**:
+     - [Budpay Terms of Service](https://budpay.com/ng/terms)
+     - [Budpay Privacy Policy](https://budpay.com/ng/policy)
+
+= Contribution =
+
+We love to get your input. you can also include or suggest feature via Github [here](https://github.com/BudPay-Org/budpay-woo-commerce-plugin/issues)
+
 == Screenshots ==
 
 
 
 == Other Notes ==
+
