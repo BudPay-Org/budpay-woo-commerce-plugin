@@ -20,7 +20,7 @@ collect both international an local payments on your store via budpay.
 = Requirements =
 
 1. WordPress 6.0 or newer.
-2. Budpay Merchant Account [API Keys](https://budpay.com/)
+2. Budpay Merchant Account [API Keys](https://app.budpay.com/login)
 3. WooCommerce 7.6 or newer.
 4. Supported PHP version: 7.4.0 or newer is recommended.
 
