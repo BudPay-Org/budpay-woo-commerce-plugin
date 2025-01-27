@@ -155,8 +155,9 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 	 * WooCommerce admin settings override.
 	 */
 	public function admin_options() {
+		$image_url = plugin_dir_url( BUDPAY_PLUGIN_FILE ) . 'assets/img/BudPay-Logo3.png';
 		?>
-		<img class="budpay__heading" src="<?php echo esc_url( plugins_url( 'assets/img/BudPay-Logo3.png', BUDPAY_PLUGIN_FILE ) ); ?>" alt="budpay" width="250px" />
+		<img class="budpay__heading" src="<?php echo esc_url( $image_url ); ?>" alt="budpay" width="250px" />
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">
