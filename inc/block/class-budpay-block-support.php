@@ -43,7 +43,7 @@ final class Budpay_Block_Support extends AbstractPaymentMethodType {
 	 * @inheritDoc
 	 */
 	public function initialize() {
-		$this->settings = get_option( 'budpay_woocommerce_settings', array() );
+		$this->settings = get_option( 'woocommerce_budpay_settings', array() );
 
 		if ( version_compare( WC_VERSION, '6.9.1', '<' ) ) {
 			// For backwards compatibility.
