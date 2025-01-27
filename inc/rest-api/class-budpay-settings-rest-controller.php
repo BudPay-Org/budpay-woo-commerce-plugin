@@ -151,7 +151,7 @@ final class Budpay_Settings_Rest_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ): WP_REST_Response {
-		$settings = get_option( 'woocommerce_budpay_settings', array() );
+		$settings = get_option( 'budpay_woocommerce_settings', array() );
 
 		return new WP_REST_Response( $settings, WP_Http::OK );
 	}
@@ -163,7 +163,7 @@ final class Budpay_Settings_Rest_Controller extends WP_REST_Controller {
 	 */
 	public function update_item( $request ): WP_REST_Response {
 		$settings = $request->get_params();
-		update_option( 'woocommerce_budpay_settings', $settings );
+		update_option( 'budpay_woocommerce_settings', $settings );
 		return new WP_REST_Response(
 			array(
 				'message' => 'Updated Successfully',

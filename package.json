@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Budpay for WooCommerce",
   "main": "index.js",
+  "repository": {
+		"type": "git",
+		"url": "https://github.com/BudPay-Org/budpay-woo-commerce-plugin.git"
+	},
   "scripts": {
     "postinstall": "composer install",
     "prebuild": "pnpm install && composer install",
