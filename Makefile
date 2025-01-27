@@ -7,7 +7,7 @@ init:
 	echo "Specify an Action"
 
 up:
-	docker-compose up  --build
+	docker-compose up -d --build
 
 down:
 	docker-compose  down
@@ -35,3 +35,6 @@ build:
 	pnpm run build
 
 release: build
+
+clean:
+	rm -rf build
