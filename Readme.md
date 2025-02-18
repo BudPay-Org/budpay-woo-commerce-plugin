@@ -23,6 +23,7 @@ Our plugin uses modern build tools, including Webpack and UglifyJS, to generate 
 Developers can reproduce the build by following these steps:
 
 ### Steps to Reproducing the build process Plugin zip.
+1. git clone https://github.com/BudPay-Org/budpay-woo-commerce-plugin.git budpay
 1. ./bin/setup.sh
 2. pnpm install 
 3. pnpm build
