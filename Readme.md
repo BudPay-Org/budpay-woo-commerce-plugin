@@ -7,6 +7,12 @@
 4. Webpack
 
 
+## Account Setup
+
+1. Setup for Account by entering your API key and Checkout preferences.
+![alt text](image.png)
+
+
 ## Build Process for Developers
 Our plugin uses modern build tools, including Webpack and UglifyJS, to generate production-ready JavaScript and CSS. The following scripts define our build process:
 ```json
