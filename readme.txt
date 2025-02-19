@@ -34,6 +34,16 @@ collect both international an local payments on your store via budpay.
 6.  Click on the __Budpay__ link from the available Checkout Options
 7. Configure your __Budpay__ settings accordingly.
 
+== Source Code & Build Process ==  
+This plugin uses modern build tools to generate production-ready JavaScript and CSS. The original source code is available in a public repository:  
+
+📌 **Source Code Repository:**  
+[GitHub - budpay-woo-commerce-plugin](https://github.com/BudPay-Org/budpay-woo-commerce-plugin)
+
+** Build Process **
+The full, unminified source code for our plugin is  publicly available at: https://github.com/BudPay-Org/budpay-woo-commerce-plugin
+Our plugin uses modern build tools, including Webpack (wp-scripts) and UglifyJS, to generate production-ready JavaScript and CSS.
+
 For FTP manual installation, [check here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
 = Configure the plugin =
