@@ -7,10 +7,10 @@ init:
 	echo "Specify an Action"
 
 up:
-	docker-compose up -d --build
+	docker compose up -d --build
 
 down:
-	docker-compose  down
+	docker compose  down
 
 
 dev-js:

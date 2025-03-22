@@ -13,11 +13,13 @@
     pkgs.nodejs_20
     pkgs.dig.dnsutils
     pkgs.nodePackages.nodemon
+    pkgs.gnumake
+    pkgs.wp-cli
   ];
 
   services.docker.enable = true;
 
-  # Sets environment variables in the workspace
+  # Sets environment variables in the workspace.
   env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
