@@ -108,15 +108,18 @@ class BudPay {
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-		add_action( 'admin_print_styles', function () {
-			# using admin_print_styles.
-			$image_url = plugin_dir_url( BUDPAY_PLUGIN_FILE ) . 'assets/img/budpay-30x30.png';
-			echo '<style> .dashicons-budpay {
+		add_action(
+			'admin_print_styles',
+			function () {
+				// using admin_print_styles.
+				$image_url = plugin_dir_url( BUDPAY_PLUGIN_FILE ) . 'assets/img/budpay-30x30.png';
+				echo '<style> .dashicons-budpay {
 					background-image: url("' . esc_url( $image_url ) . '");
 					background-repeat: no-repeat;
 					background-position: center; 
 			}</style>';
-		} );
+			}
+		);
 
 		add_action( 'admin_menu', array( $this, 'add_wc_admin_menu' ) );
 		$this->register_budpay_wc_page_items();

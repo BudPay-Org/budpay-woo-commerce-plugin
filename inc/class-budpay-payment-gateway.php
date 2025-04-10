@@ -323,7 +323,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		$body = wp_json_encode( $budpay_request );
 
-		$this->logger->info( $body );
+		$this->logger->info( 'Request Object for order' . $order_id . ':' . $body );
 
 		$args = array(
 			'method'  => 'POST',
@@ -567,6 +567,51 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 						header( 'Location: ' . wc_get_cart_url() );
 						die();
 					} else {
+						if ( 'pending' === $current_response->data->status ) {
+
+							if ( $order instanceof WC_Order ) {
+								$order->add_order_note( esc_html__( 'Payment Attempt Failed. Please Try Again.', 'budpay' ) );
+								$admin_note = esc_html__( 'Customer Payment Attempt failed. Advise customer to try again with a different Payment Method', 'budpay' ) . '<br>';
+								if ( count( $current_response->log->history ) !== 0 ) {
+									$last_item_in_history = $current_response->log->history[ count( $current_response->log->history ) - 1 ];
+									$message              = json_decode( $last_item_in_history->message, true );
+									$this->logger->error( 'Failed Customer Attempt Explanation for ' . $txn_ref . ':' . wp_json_encode( $message ) );
+									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Non-Given';
+									/* translators: %s: Reason */
+									$admin_note .= sprintf( __( 'Reason: %s', 'budpay' ), $reason );
+								} else {
+									$admin_note .= esc_html__( 'Reason: Non-Given', 'budpay' );
+								}
+
+								$order->add_order_note( $admin_note );
+							}
+							header( 'Location: ' . wc_get_checkout_url() );
+							die();
+						}
+
+						if ( 'failed' === $current_response->data->status ) {
+
+							if ( $order instanceof WC_Order ) {
+								$order->add_order_note( esc_html__( 'Payment Attempt Failed. Try Again', 'budpay' ) );
+								$order->update_status( 'failed' );
+								$admin_note = esc_html__( 'Payment Failed ', 'budpay' ) . '<br>';
+								if ( count( $current_response->log->history ) !== 0 ) {
+									$last_item_in_history = $current_response->log->history[ count( $current_response->log->history ) - 1 ];
+									$message              = json_decode( $last_item_in_history->message, true );
+									$this->logger->error( 'Failed Customer Attempt Explanation for ' . $txn_ref . ':' . wp_json_encode( $message ) );
+									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Non-Given';
+									/* translators: %s: Reason */
+									$admin_note .= sprintf( __( 'Reason: %s', 'budpay' ), $reason );
+
+								} else {
+									$admin_note .= esc_html__( 'Reason: Non-Given', 'budpay' );
+								}
+								$order->add_order_note( $admin_note );
+							}
+							header( 'Location: ' . wc_get_checkout_url() );
+							die();
+						}
+
 						$success = true;
 					}
 				} else {
@@ -644,8 +689,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$logger     = $this->logger;
 		$sdk        = $this->sdk;
 
-		$merchantSecretHash = hash_hmac("SHA512", $public_key,$secret_key);
-
+		$merchant_secret_hash = hash_hmac( 'SHA512', $public_key, $secret_key );
 
 		$event = file_get_contents( 'php://input' );
 
@@ -675,7 +719,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		if ( 'transaction' === $event->notify ) {
 			sleep( 4 );
-
+			// phpcs:ignore
 			$event_type = $event->notifyType;
 			$event_data = $event->data;
 
@@ -708,7 +752,6 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			$statuses_in_question = array( 'pending', 'on-hold' );
 			if ( 'failed' === $current_order_status ) {
 				// NOTE: customer must have tried to make payment again in the same session.
-				// TODO: add timeline to order notes to brief merchant as to why the order status changed.
 				$statuses_in_question[] = 'failed';
 			}
 			if ( ! in_array( $current_order_status, $statuses_in_question, true ) ) {
