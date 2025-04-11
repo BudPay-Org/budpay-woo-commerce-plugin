@@ -20,7 +20,7 @@ class BudPay {
 	 *
 	 * @var string
 	 */
-	public string $version = '1.0.0';
+	public string $version = '1.0.1';
 
 	/**
 	 * Plugin API version.

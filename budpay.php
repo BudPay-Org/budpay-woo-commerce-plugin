@@ -3,7 +3,7 @@
  * Plugin Name: BudPay
  * Plugin URI: https://devs.budpay.com/
  * Description: This plugin is the official plugin of Budpay.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Budpay
  * Author URI: https://app.budpay.com/
  * Developer: Budpay Devs
