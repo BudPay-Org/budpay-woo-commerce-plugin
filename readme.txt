@@ -58,7 +58,7 @@ Alternatively you can see the budpay button on the sidebar. click it.
 = Webhooks =
 
 = 1.0.1 =
-*  Fix: Pending and Failed Transaction to Successful order Bug.
+* Fixed bug that incorrectly transitioned transactions from Pending/Failed to Successful.
 = 1.0.0 =
 *   First release
 *   Added: Support for WooCommerce Blocks.
