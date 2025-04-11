@@ -4,7 +4,7 @@ Tags: payments, mastercard, visa
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Accept both international and local payments on from your store.
@@ -57,6 +57,8 @@ Alternatively you can see the budpay button on the sidebar. click it.
 
 = Webhooks =
 
+= 1.0.1 =
+*  Fix: Pending and Failed Transaction to Successful order Bug.
 = 1.0.0 =
 *   First release
 *   Added: Support for WooCommerce Blocks.
