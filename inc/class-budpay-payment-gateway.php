@@ -717,7 +717,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$merchant_secret_hash = hash_hmac( 'SHA512', $public_key, $secret_key );
 
 		if(!isset($_SERVER['HTTP_MERCHANTSIGNATURE']) || '52.3.180.49' != $this->budpay_get_client_ip()) {
-			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
+			$this->logger->info( 'Faudulent Webhook Notification Attempt [Access Restricted]: '. (string) $this->budpay_get_client_ip() );
 			wp_send_json(
 				array(
 					'status'  => 'error',
@@ -732,7 +732,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		if($merchant_secret_hash != $webhook_signature)
 		{
-			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
+			$this->logger->info( 'Faudulent Webhook Notification Attempt [Signature Mismatch]: '. (string) $this->budpay_get_client_ip() );
 			wp_send_json(
 				array(
 					'status'  => 'error',
