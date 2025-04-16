@@ -561,7 +561,6 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
 							$order->update_status( 'cancelled' );
 							$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
-							$admin_note .= esc_html__( 'Please, confirm from the order notes that there is no note of a successful transaction. If there is, this means that the user was debited and you either have to give value for the transaction or refund the customer.', 'budpay' );
 							$order->add_order_note( $admin_note );
 						}
 						header( 'Location: ' . wc_get_cart_url() );
@@ -576,11 +575,11 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 									$last_item_in_history = $current_response->log->history[ count( $current_response->log->history ) - 1 ];
 									$message              = json_decode( $last_item_in_history->message, true );
 									$this->logger->error( 'Failed Customer Attempt Explanation for ' . $txn_ref . ':' . wp_json_encode( $message ) );
-									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Non-Given';
+									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Unknown';
 									/* translators: %s: Reason */
 									$admin_note .= sprintf( __( 'Reason: %s', 'budpay' ), $reason );
 								} else {
-									$admin_note .= esc_html__( 'Reason: Non-Given', 'budpay' );
+									$admin_note .= esc_html__( 'Reason: Unknown', 'budpay' );
 								}
 
 								$order->add_order_note( $admin_note );
@@ -680,6 +679,32 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		die();
 	}
 
+	public function budpay_get_client_ip() {
+		$ip_keys = [
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'REMOTE_ADDR'
+		];
+	
+		foreach ($ip_keys as $key) {
+			if (!empty($_SERVER[$key])) {
+				$ip_list = explode(',', $_SERVER[$key]);
+				foreach ($ip_list as $ip) {
+					$ip = trim($ip);
+					if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+						return $ip;
+					}
+				}
+			}
+		}
+	
+		return 'UNKNOWN';
+	}
+
 	/**
 	 * Process Webhook notifications.
 	 */
@@ -690,6 +715,32 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		$sdk        = $this->sdk;
 
 		$merchant_secret_hash = hash_hmac( 'SHA512', $public_key, $secret_key );
+
+		if(!isset($_SERVER['HTTP_MERCHANTSIGNATURE']) || '52.3.180.49' != $this->budpay_get_client_ip()) {
+			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
+			wp_send_json(
+				array(
+					'status'  => 'error',
+					'message' => 'Unauthorized Access (Restriction)',
+				),
+				WP_Http::UNAUTHORIZED
+			);
+		}
+
+		// retrieve the signature sent in the request header's.
+		$webhook_signature = ( sanitize_text_field( wp_unslash( $_SERVER['HTTP_MERCHANTSIGNATURE'] ) ) ?? '' );
+
+		if($merchant_secret_hash != $webhook_signature)
+		{
+			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
+			wp_send_json(
+				array(
+					'status'  => 'error',
+					'message' => 'Unauthorized Access (mismatch)'
+				),
+				WP_Http::UNAUTHORIZED
+			);
+		}
 
 		$event = file_get_contents( 'php://input' );
 
@@ -703,7 +754,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 					'status'  => 'error',
 					'message' => 'Webhook sent is deformed. missing data object.',
 				),
-				WP_Http::NO_CONTENT
+				WP_Http::BAD_REQUEST
 			);
 		}
 
@@ -717,28 +768,41 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
+		$this->logger->info( 'Webhook: ' . wp_json_encode( $event ) );
+
 		if ( 'transaction' === $event->notify ) {
-			sleep( 4 );
+			sleep( 2 );
 			// phpcs:ignore
 			$event_type = $event->notifyType;
 			$event_data = $event->data;
 
 			// check if transaction reference starts with WOO on hpos enabled.
-			if ( substr( $event_data->reference, 0, 4 ) !== 'WOO' ) {
+			if ( substr( $event_data->reference, 0, 4 ) !== 'WOO_' ) {
 				wp_send_json(
 					array(
 						'status'  => 'failed',
-						'message' => 'The transaction reference ' . $event_data->tx_ref . ' is not a Budpay WooCommerce Generated transaction',
+						'message' => 'The transaction reference ' . $event_data->reference . ' is not a Budpay WooCommerce Generated transaction'
 					),
-					WP_Http::OK
+					WP_Http::BAD_REQUEST
 				);
 			}
 
-			$txn_ref  = sanitize_text_field( $event_data->tx_ref );
+			$txn_ref  = sanitize_text_field( $event_data->reference );
 			$o        = explode( '_', $txn_ref );
 			$order_id = intval( $o[1] );
 			$order    = wc_get_order( $order_id );
+
 			// get order status.
+			if(!$order) {
+				wp_send_json(
+					array(
+						'status'  => 'failed',
+						'message' => 'This transaction does not exist.'
+					),
+					WP_Http::BAD_REQUEST
+				);
+			}
+
 			$current_order_status = $order->get_status();
 
 			/**
@@ -748,12 +812,13 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			 * @since 1.0.0
 			 */
 			do_action( 'budpay_webhook_after_action', wp_json_encode( $event, true ) );
-			// TODO: Handle Checkout draft status for WooCommerce Blocks users.
+			// TODO: Handle Checkout Blocks draft status for WooCommerce Blocks users.
 			$statuses_in_question = array( 'pending', 'on-hold' );
 			if ( 'failed' === $current_order_status ) {
 				// NOTE: customer must have tried to make payment again in the same session.
 				$statuses_in_question[] = 'failed';
 			}
+			
 			if ( ! in_array( $current_order_status, $statuses_in_question, true ) ) {
 				wp_send_json(
 					array(
@@ -779,13 +844,65 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 					),
 				);
 
-				$order->add_order_note( esc_html__( 'verifying the Payment of Budpay...', 'budpay' ) );
+				$order->add_order_note( esc_html__( 'verifying the Payment on Budpay...', 'budpay' ) );
 
 				$response = wp_safe_remote_request( $this->base_url . 'transaction/verify/:' . $txn_ref, $args );
 
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					// Request successful.
-					$success = true;
+					$current_response                  = \json_decode( $response['body'] );
+					$is_cancelled_or_pending_on_budpay = in_array( $current_response->data->status, array( 'cancelled', 'pending' ), true );
+					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && $is_cancelled_or_pending_on_budpay ) {
+						if ( $order instanceof WC_Order ) {
+							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
+							$order->update_status( 'cancelled' );
+							$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
+							$order->add_order_note( $admin_note );
+						}
+					} else {
+						if ( 'pending' === $current_response->data->status ) {
+
+							if ( $order instanceof WC_Order ) {
+								$order->add_order_note( esc_html__( 'Payment Attempt Failed. Please Try Again.', 'budpay' ) );
+								$admin_note = esc_html__( 'Customer Payment Attempt failed. Advise customer to try again with a different Payment Method', 'budpay' ) . '<br>';
+								if ( count( $current_response->log->history ) !== 0 ) {
+									$last_item_in_history = $current_response->log->history[ count( $current_response->log->history ) - 1 ];
+									$message              = json_decode( $last_item_in_history->message, true );
+									$this->logger->error( 'Failed Customer Attempt Explanation for ' . $txn_ref . ':' . wp_json_encode( $message ) );
+									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Unknown';
+									/* translators: %s: Reason */
+									$admin_note .= sprintf( __( 'Reason: %s', 'budpay' ), $reason );
+								} else {
+									$admin_note .= esc_html__( 'Reason: Unknown', 'budpay' );
+								}
+
+								$order->add_order_note( $admin_note );
+							}
+						}
+
+						if ( 'failed' === $current_response->data->status ) {
+
+							if ( $order instanceof WC_Order ) {
+								$order->add_order_note( esc_html__( 'Payment Attempt Failed. Try Again', 'budpay' ) );
+								$order->update_status( 'failed' );
+								$admin_note = esc_html__( 'Payment Failed ', 'budpay' ) . '<br>';
+								if ( count( $current_response->log->history ) !== 0 ) {
+									$last_item_in_history = $current_response->log->history[ count( $current_response->log->history ) - 1 ];
+									$message              = json_decode( $last_item_in_history->message, true );
+									$this->logger->error( 'Failed Customer Attempt Explanation for ' . $txn_ref . ':' . wp_json_encode( $message ) );
+									$reason = $message['error']['explanation'] ?? $message['errors'][0]['message'] ?? 'Non-Given';
+									/* translators: %s: Reason */
+									$admin_note .= sprintf( __( 'Reason: %s', 'budpay' ), $reason );
+
+								} else {
+									$admin_note .= esc_html__( 'Reason: Non-Given', 'budpay' );
+								}
+								$order->add_order_note( $admin_note );
+							}
+						}
+
+						$success = true;
+					}
 				} else {
 					// Retry.
 					++$attempt;
@@ -839,7 +956,13 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		wp_safe_redirect( home_url() );
+		wp_send_json(
+			array(
+				'status'  => 'failed',
+				'message' => 'Unable to Processed Successfully',
+			),
+			WP_Http::CREATED
+		);
 		exit();
 	}
 }
