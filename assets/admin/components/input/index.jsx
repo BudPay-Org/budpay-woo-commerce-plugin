@@ -1,56 +1,74 @@
 import { __experimentalInputControl as InputControl, SelectControl } from '@wordpress/components';
 import { useState, useEffect } from 'react';
-// import { useState } from '@wordpress/element';
 
-export const CustomSelectControl = ({ labelName, initalValue, options  }) => {
-  const [ value, setValue ] = useState( initalValue );
+export const CustomSelectControl = ({ labelName, initialValue, options, onChange }) => {
+  const [value, setValue] = useState(initialValue);
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
+    onChange?.(newValue);
+  };
 
   return (
     <SelectControl
-      label={ labelName || "{{ No Label Added }}" }
-      value={ value }
-      options={ options }
-      onChange={ setValue }
+      label={labelName || 'No Label Added'}
+      value={value}
+      options={options}
+      onChange={handleChange}
     />
   );
 };
 
-export const InputWithSideLabel = ({ initialValue, labelName, isConfidential }) => {
-   const isHidden = isConfidential || false;
-   const [ value, setValue ] = useState( initialValue );
-   return (
-      <InputControl
-         __unstableInputWidth="3em"
-         label={ labelName || '{{label_name}}'}
-         value={ value }
-         type={ (isHidden)? 'password' : 'text' }
-         labelPosition="edge"
-         onChange={( nextValue ) => setValue( nextValue ?? '' )}
-      />
-   )
-}
+export const InputWithSideLabel = ({ initialValue, labelName, isConfidential, onChange }) => {
+  const [value, setValue] = useState(initialValue);
+  const type = isConfidential ? 'password' : 'text';
 
-const Input = ({ initialValue, labelName, onChange,  isConfidential }) => {
-  const isHidden = isConfidential || false;
-  const [ value, setValue ] = useState( initialValue );
-
-  const handleValueChange = (evt) => {
-   onChange(evt)
-   setValue(evt)
-  }
-
-  useEffect(()=>{
-
-  },[value]);
+  const handleChange = (nextValue) => {
+    const newValue = nextValue ?? '';
+    setValue(newValue);
+    onChange?.(newValue);
+  };
 
   return (
-     <InputControl
-        label={ labelName || '{{label_name}}'}
-        value={ value }
-        type={ (isHidden)? 'password' : 'text' }
-        onChange={ evt => handleValueChange(evt) }
-     />
+    <InputControl
+      __unstableInputWidth="3em"
+      label={labelName || 'Label'}
+      value={value}
+      type={type}
+      labelPosition="edge"
+      onChange={handleChange}
+    />
   );
 };
+
+const Input = ({ initialValue, labelName, onChange, isConfidential, error }) => {
+   const [value, setValue] = useState(initialValue);
+   const type = isConfidential ? 'password' : 'text';
+ 
+   const handleChange = (nextValue) => {
+     setValue(nextValue);
+     onChange?.(nextValue);
+   };
+ 
+   useEffect(() => {
+     // Optional side effects when value changes
+   }, [value]);
+ 
+   return (
+     <div style={{ marginBottom: '1rem' }}>
+       <InputControl
+         label={labelName || 'Label'}
+         value={value}
+         type={type}
+         onChange={handleChange}
+       />
+       {error && (
+         <p style={{ color: 'red', fontSize: '0.875em', marginTop: '0.25rem' }}>
+           {error}
+         </p>
+       )}
+     </div>
+   );
+ };
 
 export default Input;

@@ -4,14 +4,14 @@ Tags: payments, mastercard, visa
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: 1.0.1
+Stable tag: 1.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Accept both international and local payments on from your store.
 
 == Description ==
 
-collect both international an local payments on your store via budpay. 
+collect both international an local payments on your store via budpay.
 
 = Plugin Features =
 * Collections: Card, Bank Transfer
@@ -34,10 +34,10 @@ collect both international an local payments on your store via budpay.
 6.  Click on the __Budpay__ link from the available Checkout Options
 7. Configure your __Budpay__ settings accordingly.
 
-== Source Code & Build Process ==  
-This plugin uses modern build tools to generate production-ready JavaScript and CSS. The original source code is available in a public repository:  
+== Source Code & Build Process ==
+This plugin uses modern build tools to generate production-ready JavaScript and CSS. The original source code is available in a public repository:
 
-📌 **Source Code Repository:**  
+📌 **Source Code Repository:**
 [GitHub - budpay-woo-commerce-plugin](https://github.com/BudPay-Org/budpay-woo-commerce-plugin)
 
 ** Build Process **
@@ -76,7 +76,7 @@ This plugin integrates with external services to process payments and provide a 
    - **Data Sent**: The plugin sends transaction details, such as the amount, currency, and user-specific identifiers, to Budpay's API endpoints.
      - **API Endpoint**: `https://api.budpay.com/api/v2/`
      - **Inline Payment Script**: `https://inlinepay.budpay.com/budpay-inline-custom.js`
-   - **When data is sent**: 
+   - **When data is sent**:
      - Data is sent to Budpay's API when a user initiates a payment.
      - The inline script is loaded on the checkout page for payment functionality.
    - **Links**:
@@ -92,4 +92,3 @@ We love to get your input. you can also include or suggest feature via Github [h
 
 
 == Other Notes ==
-

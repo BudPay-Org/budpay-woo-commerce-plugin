@@ -20,7 +20,7 @@ class BudPay {
 	 *
 	 * @var string
 	 */
-	public string $version = '1.0.1';
+	public string $version = '1.0.3';
 
 	/**
 	 * Plugin API version.
@@ -204,62 +204,62 @@ class BudPay {
 	 */
 	public function register_budpay_wc_page_items() {
 		if ( ! method_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu', 'add_plugin_category' ) ||
-				! method_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu', 'add_plugin_item' )
-			) {
+			! method_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu', 'add_plugin_item' )
+		) {
 			return;
 		}
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_category(
-				array(
-					'id'         => 'budpay-root',
-					'title'      => 'Budpay',
-					'capability' => 'view_woocommerce_reports',
-				)
-			);
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-				array(
-					'id'         => 'budpay-1',
-					'parent'     => 'budpay-root',
-					'title'      => 'Budpay 1',
-					'capability' => 'view_woocommerce_reports',
-					'url'        => 'https://budpay.com/',
-				)
-			);
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-				array(
-					'id'         => 'budpay-2',
-					'parent'     => 'budpay-root',
-					'title'      => 'Budpay 2',
-					'capability' => 'view_woocommerce_reports',
-					'url'        => 'https://budpay.com/',
-				)
-			);
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_category(
-				array(
-					'id'              => 'sub-menu',
-					'parent'          => 'budpay-root',
-					'title'           => 'Budpay Menu',
-					'capability'      => 'view_woocommerce_reports',
-					'backButtonLabel' => 'Budpay',
-				)
-			);
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-				array(
-					'id'         => 'sub-menu-child-1',
-					'parent'     => 'sub-menu',
-					'title'      => 'Sub Menu Child 1',
-					'capability' => 'view_woocommerce_reports',
-					'url'        => 'http//:www.google.com',
-				)
-			);
-			\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
-				array(
-					'id'         => 'sub-menu-child-2',
-					'parent'     => 'sub-menu',
-					'title'      => 'Sub Menu Child 2',
-					'capability' => 'view_woocommerce_reports',
-					'url'        => 'https://budpay.com/',
-				)
-			);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_category(
+			array(
+				'id'         => 'budpay-root',
+				'title'      => 'Budpay',
+				'capability' => 'view_woocommerce_reports',
+			)
+		);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
+			array(
+				'id'         => 'budpay-1',
+				'parent'     => 'budpay-root',
+				'title'      => 'Budpay 1',
+				'capability' => 'view_woocommerce_reports',
+				'url'        => 'https://budpay.com/',
+			)
+		);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
+			array(
+				'id'         => 'budpay-2',
+				'parent'     => 'budpay-root',
+				'title'      => 'Budpay 2',
+				'capability' => 'view_woocommerce_reports',
+				'url'        => 'https://budpay.com/',
+			)
+		);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_category(
+			array(
+				'id'              => 'sub-menu',
+				'parent'          => 'budpay-root',
+				'title'           => 'Budpay Menu',
+				'capability'      => 'view_woocommerce_reports',
+				'backButtonLabel' => 'Budpay',
+			)
+		);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
+			array(
+				'id'         => 'sub-menu-child-1',
+				'parent'     => 'sub-menu',
+				'title'      => 'Sub Menu Child 1',
+				'capability' => 'view_woocommerce_reports',
+				'url'        => 'http//:www.google.com',
+			)
+		);
+		\Automattic\WooCommerce\Admin\Features\Navigation\Menu::add_plugin_item(
+			array(
+				'id'         => 'sub-menu-child-2',
+				'parent'     => 'sub-menu',
+				'title'      => 'Sub Menu Child 2',
+				'capability' => 'view_woocommerce_reports',
+				'url'        => 'https://budpay.com/',
+			)
+		);
 	}
 
 	/**
