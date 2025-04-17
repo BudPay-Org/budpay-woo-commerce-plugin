@@ -560,7 +560,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 						if ( $order instanceof WC_Order ) {
 							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
 							$order->update_status( 'cancelled' );
-							$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
+							$admin_note = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
 							$order->add_order_note( $admin_note );
 						}
 						header( 'Location: ' . wc_get_cart_url() );
@@ -679,29 +679,34 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 		die();
 	}
 
+	/**
+	 * Get the Ip of the current request.
+	 *
+	 * @return string
+	 */
 	public function budpay_get_client_ip() {
-		$ip_keys = [
+		$ip_keys = array(
 			'HTTP_CLIENT_IP',
 			'HTTP_X_FORWARDED_FOR',
 			'HTTP_X_FORWARDED',
 			'HTTP_X_CLUSTER_CLIENT_IP',
 			'HTTP_FORWARDED_FOR',
 			'HTTP_FORWARDED',
-			'REMOTE_ADDR'
-		];
-	
-		foreach ($ip_keys as $key) {
-			if (!empty($_SERVER[$key])) {
-				$ip_list = explode(',', $_SERVER[$key]);
-				foreach ($ip_list as $ip) {
-					$ip = trim($ip);
-					if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+			'REMOTE_ADDR',
+		);
+
+		foreach ( $ip_keys as $key ) {
+			if ( ! empty( $_SERVER[ $key ] ) ) {
+				$ip_list = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) ) );
+				foreach ( $ip_list as $ip ) {
+					$ip = trim( $ip );
+					if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
 						return $ip;
 					}
 				}
 			}
 		}
-	
+
 		return 'UNKNOWN';
 	}
 
@@ -716,27 +721,12 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		$merchant_secret_hash = hash_hmac( 'SHA512', $public_key, $secret_key );
 
-		if(!isset($_SERVER['HTTP_MERCHANTSIGNATURE']) || '52.3.180.49' != $this->budpay_get_client_ip()) {
-			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
+		if ( '52.3.180.49' !== $this->budpay_get_client_ip() ) {
+			$this->logger->info( 'Faudulent Webhook Notification Attempt [Access Restricted]: ' . (string) $this->budpay_get_client_ip() );
 			wp_send_json(
 				array(
 					'status'  => 'error',
 					'message' => 'Unauthorized Access (Restriction)',
-				),
-				WP_Http::UNAUTHORIZED
-			);
-		}
-
-		// retrieve the signature sent in the request header's.
-		$webhook_signature = ( sanitize_text_field( wp_unslash( $_SERVER['HTTP_MERCHANTSIGNATURE'] ) ) ?? '' );
-
-		if($merchant_secret_hash != $webhook_signature)
-		{
-			$this->logger->info( 'Faudulent Webhook Notification Attempt: '. (string) $this->budpay_get_client_ip() );
-			wp_send_json(
-				array(
-					'status'  => 'error',
-					'message' => 'Unauthorized Access (mismatch)'
 				),
 				WP_Http::UNAUTHORIZED
 			);
@@ -781,7 +771,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 				wp_send_json(
 					array(
 						'status'  => 'failed',
-						'message' => 'The transaction reference ' . $event_data->reference . ' is not a Budpay WooCommerce Generated transaction'
+						'message' => 'The transaction reference ' . $event_data->reference . ' is not a Budpay WooCommerce Generated transaction',
 					),
 					WP_Http::BAD_REQUEST
 				);
@@ -793,11 +783,11 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			$order    = wc_get_order( $order_id );
 
 			// get order status.
-			if(!$order) {
+			if ( ! $order ) {
 				wp_send_json(
 					array(
 						'status'  => 'failed',
-						'message' => 'This transaction does not exist.'
+						'message' => 'This transaction does not exist.',
 					),
 					WP_Http::BAD_REQUEST
 				);
@@ -813,12 +803,12 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 			 */
 			do_action( 'budpay_webhook_after_action', wp_json_encode( $event, true ) );
 			// TODO: Handle Checkout Blocks draft status for WooCommerce Blocks users.
-			$statuses_in_question = array( 'pending', 'on-hold' );
+			$statuses_in_question = array( 'pending', 'on-hold', 'cancelled' );
 			if ( 'failed' === $current_order_status ) {
 				// NOTE: customer must have tried to make payment again in the same session.
 				$statuses_in_question[] = 'failed';
 			}
-			
+
 			if ( ! in_array( $current_order_status, $statuses_in_question, true ) ) {
 				wp_send_json(
 					array(
@@ -852,11 +842,11 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 					// Request successful.
 					$current_response                  = \json_decode( $response['body'] );
 					$is_cancelled_or_pending_on_budpay = in_array( $current_response->data->status, array( 'cancelled', 'pending' ), true );
-					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && $is_cancelled_or_pending_on_budpay ) {
+					if ( isset( $_GET['status'] ) && 'cancelled' === $_GET['status'] && $is_cancelled_or_pending_on_budpay ) { // phpcs:ignore
 						if ( $order instanceof WC_Order ) {
 							$order->add_order_note( esc_html__( 'The customer clicked on the cancel button on Checkout.', 'budpay' ) );
 							$order->update_status( 'cancelled' );
-							$admin_note  = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
+							$admin_note = esc_html__( 'Attention: Customer clicked on the cancel button on the payment gateway. We have updated the order to cancelled status. ', 'budpay' ) . '<br>';
 							$order->add_order_note( $admin_note );
 						}
 					} else {

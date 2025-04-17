@@ -93,6 +93,13 @@ const BudpaySettings = () => {
         // { label: 'Popup', value: 'inline' },
     ];
 
+	const [errors, setErrors] = useState({
+		live_secret_key: '',
+		live_public_key: '',
+		test_secret_key: '',
+		test_public_key: '',
+	});
+
 	let headingStyle = {  };
 
 	if(firstName != '') {
@@ -107,25 +114,61 @@ const BudpaySettings = () => {
 			[key]: value 
 		}));
 	};
+
+	const validateKey = (key, type) => {
+		if (type === 'public') {
+			return key.startsWith('pk_live_') || key.startsWith('pk_test_');
+		}
+		if (type === 'secret') {
+			return key.startsWith('sk_live_') || key.startsWith('sk_test_');
+		}
+		return false;
+	};
 	
-	const handleSecretKeyChange = (evt) => {
-		handleChange('live_secret_key', evt);
+
+	const handleSecretKeyChange = (value) => {
+		handleChange('live_secret_key', value);
+	
+		const isValid = validateKey(value, 'secret');
+		setErrors((prev) => ({
+			...prev,
+			live_secret_key: isValid ? '' : 'Invalid Secret Key. Must start with sk_live_',
+		}));
+	};
+	
+	const handlePublicKeyChange = (value) => {
+		handleChange('live_public_key', value);
+	
+		const isValid = validateKey(value, 'public');
+		setErrors((prev) => ({
+			...prev,
+			live_public_key: isValid ? '' : 'Invalid Public Key. Must start with pk_live_',
+		}));
 	};
 
 	const handlePaymentTitle = (evt) => {
 		handleChange('title', evt);
 	}
 	
-	const handlePublicKeyChange = (evt) => {
-		handleChange('live_public_key', evt);
+
+	const handleTestSecretKeyChange = (value) => {
+		handleChange('test_secret_key', value);
+
+		const isValid = validateKey(value, 'secret');
+		setErrors((prev) => ({
+			...prev,
+			test_secret_key: isValid ? '' : 'Invalid Secret Key. Must start with sk_test_',
+		}));
 	};
 
-	const handleTestSecretKeyChange = (evt) => {
-		handleChange('test_secret_key', evt);
-	};
+	const handleTestPublicKeyChange = (value) => {
+		handleChange('test_public_key', value);
 
-	const handleTestPublicKeyChange = (evt) => {
-		handleChange('test_public_key', evt);
+		const isValid = validateKey(value, 'public');
+		setErrors((prev) => ({
+			...prev,
+			test_public_key: isValid ? '' : 'Invalid Public Key. Must start with pk_test_',
+		}));
 	};
 
 	return (
@@ -171,11 +214,11 @@ const BudpaySettings = () => {
 							/>
 							
 							<div className="budpday-settings__inputs">
-								<Input labelName="Secret Key" initialValue={ budpaySettings.live_secret_key } onChange={ handleSecretKeyChange } isConfidential />
-								<Input labelName="Public Key" initialValue={ budpaySettings.live_public_key } onChange={ handlePublicKeyChange }  />
+								<Input labelName="Secret Key" initialValue={ budpaySettings.live_secret_key } onChange={ handleSecretKeyChange } isConfidential error={errors.live_secret_key} />
+								<Input labelName="Public Key" initialValue={ budpaySettings.live_public_key } onChange={ handlePublicKeyChange }  error={errors.live_public_key}/>
 							</div>
 
-							<Text className="budpay-webhook-link" numberOfLines={1} >
+							<Text className="budpay-webhook-link" numberOfLines={1} color="red" >
 								{ budpayData.budpay_webhook }
 							</Text>
 
@@ -273,8 +316,8 @@ const BudpaySettings = () => {
 					>
 							<p>{ strings.sandboxMode.description }</p>
 						<div className="budpday-settings__inputs">
-							<Input labelName="Test Secret Key" initialValue={ budpaySettings.test_secret_key } onChange={ handleTestSecretKeyChange }  isConfidential />
-							<Input labelName="Test Public Key" initialValue={ budpaySettings.test_public_key } onChange={ handleTestPublicKeyChange }  />
+							<Input labelName="Test Secret Key" initialValue={ budpaySettings.test_secret_key } onChange={ handleTestSecretKeyChange }  isConfidential error={errors.test_secret_key}/>
+							<Input labelName="Test Public Key" initialValue={ budpaySettings.test_public_key } onChange={ handleTestPublicKeyChange }  error={errors.test_public_key}/>
 						</div>
 						<EnableTestModeButton
 							className="budpay-settings-cta"
