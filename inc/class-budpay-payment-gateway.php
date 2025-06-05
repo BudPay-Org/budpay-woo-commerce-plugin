@@ -721,7 +721,7 @@ class Budpay_Payment_Gateway extends WC_Payment_Gateway {
 
 		$merchant_secret_hash = hash_hmac( 'SHA512', $public_key, $secret_key );
 
-		if ( '52.3.180.49' !== $this->budpay_get_client_ip() ) {
+		if ( BUDPAY_ALLOWED_WEBHOOK_IP_ADDRESS !== $this->budpay_get_client_ip() ) {
 			$this->logger->info( 'Faudulent Webhook Notification Attempt [Access Restricted]: ' . (string) $this->budpay_get_client_ip() );
 			wp_send_json(
 				array(
