@@ -12,7 +12,6 @@ up:
 down:
 	docker compose  down
 
-
 dev-js:
 	pnpm run start
 

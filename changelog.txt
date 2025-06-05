@@ -1,0 +1,4 @@
+== Changelog ==
+= 1.0.4 =
+* Fixed: Allowed IP Address for Webhook notification for Budpay.
+* Enhancement: Move IP Address to the global constant register.

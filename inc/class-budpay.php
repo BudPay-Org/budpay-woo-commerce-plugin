@@ -20,7 +20,7 @@ class BudPay {
 	 *
 	 * @var string
 	 */
-	public string $version = '1.0.3';
+	public string $version = '1.0.4';
 
 	/**
 	 * Plugin API version.
@@ -78,6 +78,7 @@ class BudPay {
 		$this->define( 'BUDPAY_DIR_PATH', plugin_dir_path( BUDPAY_PLUGIN_FILE ) );
 		$this->define( 'BUDPAY_MIN_WC_VER', '6.9.1' );
 		$this->define( 'BUDPAY_URL', trailingslashit( plugins_url( '/', BUDPAY_PLUGIN_FILE ) ) );
+		$this->define( 'BUDPAY_ALLOWED_WEBHOOK_IP_ADDRESS', '23.23.23.99');
 		$this->define( 'BUDPAY_EPSILON', 0.01 );
 	}
 
